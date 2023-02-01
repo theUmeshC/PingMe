@@ -6,10 +6,12 @@ export const private_connection = sequelize.define("private_connects",{
     sender_id: {
         type : Sequelize.INTEGER,
         allowNull: false,
+        primaryKey: true
     },
     receiver_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        primaryKey: true
     },
     chat_id: {
         type: Sequelize.INTEGER,
@@ -17,37 +19,34 @@ export const private_connection = sequelize.define("private_connects",{
     }
 });
 
-// export const group_connection = sequelize.define("group_connects",{
-//     user_id: {
-//         type : Sequelize.NUMBER,
-//         allowNull: false,
-//         default: 1,
+export const group_connection = sequelize.define("group_connects",{
+    user_id: {
+        type : Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true
+    },
+    group_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true
+    },
+    chat_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        default: 1,
 
-//     },
-//     group_id: {
-//         type: Sequelize.NUMBER,
-//         allowNull: false,
-//         default: 1,
+    }
+});
 
-//     },
-//     chat_id: {
-//         type: Sequelize.NUMBER,
-//         allowNull: false,
-//         default: 1,
+export const chats = sequelize.define('chats', {
+    chat_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        default: 1,
 
-//     }
-// });
-
-// export const chats = sequelize.define('chats', {
-//     chat_id: {
-//         type: Sequelize.NUMBER,
-//         allowNull: false,
-//         default: 1,
-
-//     },
-//     message: {
-//         type: Sequelize.STRING,
-//         allowNull: false,
-//         default: 'HELLO',
-//     },
-// });
+    },
+    message: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+    },
+});
