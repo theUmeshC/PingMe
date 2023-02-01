@@ -33,8 +33,6 @@ export const group_connection = sequelize.define("group_connects",{
     chat_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        default: 1,
-
     }
 });
 
@@ -42,8 +40,6 @@ export const chats = sequelize.define('chats', {
     chat_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        default: 1,
-
     },
     message: {
         type: Sequelize.TEXT,
