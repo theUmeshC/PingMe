@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 
 import sequelize from "../utils/database.js";
+import Users from "./Users.js";
 
 export const private_connection = sequelize.define(
   "individual_connect",
@@ -40,20 +41,17 @@ export const group_connection = sequelize.define(
   }
 );
 
-export const chat = sequelize.define(
-  "chat",
-  {
-    chat_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
-    message: {
-      type: Sequelize.TEXT,
-      allowNull: false,
-    },
+export const chat = sequelize.define("chat", {
+  chat_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    primaryKey: true,
   },
-);
+  message: {
+    type: Sequelize.TEXT,
+    allowNull: false,
+  },
+});
 
 chat.hasMany(private_connection, {
   foreignKey: {
@@ -64,12 +62,20 @@ chat.hasMany(private_connection, {
 
 private_connection.belongsTo(chat);
 
-
 chat.hasMany(group_connection, {
-    foreignKey: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
-  });
-  
-  group_connection.belongsTo(chat);
+  foreignKey: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+});
+
+group_connection.belongsTo(chat);
+
+Users.hasMany(chat, {
+  foreignKey: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+});
+
+chat.belongsTo(Users);
