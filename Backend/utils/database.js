@@ -1,6 +1,9 @@
 import Sequelize from "sequelize";
+import { config } from "dotenv";
 
-const sequelize = new Sequelize('chat-db', 'postgres', 'Cel@1234', {
+config();
+
+const sequelize = new Sequelize('chat-db', process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD, {
     host: 'localhost',
     dialect: 'postgres' ,
   });
