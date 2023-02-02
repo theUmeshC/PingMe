@@ -9,12 +9,6 @@ export const private_connection = sequelize.define(
     sender_id: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      primaryKey: true,
-    },
-    receiver_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
     },
   },
   {
@@ -79,3 +73,12 @@ Users.hasMany(chat, {
 });
 
 chat.belongsTo(Users);
+
+Users.hasMany(private_connection, {
+  foreignKey: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+});
+
+private_connection.belongsTo(Users);
