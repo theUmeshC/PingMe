@@ -21,6 +21,7 @@ app.use("/users", router);
 app.use("/chat", chatRouter);
 
 sequelize
+  // .sync({alter: true})
   .sync()
   .then(() => {
     console.log("connected to database successfully");
