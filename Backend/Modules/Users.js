@@ -3,6 +3,10 @@ import { Sequelize } from "sequelize";
 import sequelize from "../utils/database.js";
 
 const Users = sequelize.define("Users", {
+  user_id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+  },
   username: {
     type: Sequelize.STRING,
     allowNull: false,

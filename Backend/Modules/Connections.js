@@ -3,82 +3,78 @@ import { Sequelize } from "sequelize";
 import sequelize from "../utils/database.js";
 import Users from "./Users.js";
 
-export const private_connection = sequelize.define(
-  "individual_connect",
-  {
-    sender_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
+export const user_private_connections = sequelize.define("user_private_connection", {
+  chat_id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
   },
-  {
-    timestamp: false,
-  }
+});
+
+export const user_group_participants = sequelize.define(
+  "user_group_participant",
+  {}
 );
 
-export const group_connection = sequelize.define(
-  "group_connect",
-  {
-    user_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
-    group_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
+export const user_group_connection = sequelize.define("user_group_connection", {
+  group_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    primaryKey: true,
   },
-  {
-    timestamp: false,
-  }
-);
-
-export const chat = sequelize.define("chat", {
+  group_name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   chat_id: {
     type: Sequelize.INTEGER,
     allowNull: false,
     primaryKey: true,
   },
+});
+
+export const chat = sequelize.define("chat", {
   message: {
     type: Sequelize.TEXT,
     allowNull: false,
   },
+  status: {
+    type: Sequelize.STRING,
+    defaultValue:'pending'
+  }
 });
 
-chat.hasMany(private_connection, {
+Users.hasMany(user_private_connections, {
   foreignKey: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
 });
 
-private_connection.belongsTo(chat);
+user_private_connections.belongsTo(Users, {as: 'sender_id'});
 
-chat.hasMany(group_connection, {
+Users.hasMany(user_private_connections, {
   foreignKey: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
 });
 
-group_connection.belongsTo(chat);
+user_private_connections.belongsTo(Users, {as: 'receiver_id'});
 
-Users.hasMany(chat, {
+user_group_connection.hasMany(user_group_participants, {
   foreignKey: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
 });
 
-chat.belongsTo(Users);
+user_group_participants.belongsTo(user_group_connection);
 
-Users.hasMany(private_connection, {
+Users.hasMany(user_group_participants, {
   foreignKey: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
 });
 
-private_connection.belongsTo(Users);
+user_group_participants.belongsTo(Users);
