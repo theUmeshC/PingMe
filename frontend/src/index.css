@@ -4,3 +4,8 @@ body{
   box-sizing: border-box;
   text-decoration: none;
 }
+
+.loginBtn{
+  cursor: pointer;
+  padding: 5px 15px;
+}
