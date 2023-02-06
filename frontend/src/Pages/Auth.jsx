@@ -18,7 +18,7 @@ const Auth = () => {
     );
   } else {
     history.replace('/home');
-    return "";
+    return "You authenticated";
   }
 };
 

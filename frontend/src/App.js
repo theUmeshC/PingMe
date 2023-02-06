@@ -12,7 +12,6 @@ const CALLBACK_PATH = "/login/callback";
 const oktaAuth = new OktaAuth(oktaConfig);
 
 function App() {
-
   const history = useHistory();
   const restoreOriginalUri = async (_oktaAuth, originalUri) => {
     history.replace(toRelativeUrl(originalUri || "/", window.location.origin));
@@ -22,15 +21,17 @@ function App() {
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
       <ColorContextProvider>
         <div>
-          <NavBar />
           <Switch>
-            <Route exact path = "/">
+            <Route exact path="/">
               <Auth />
             </Route>
-            <Route exact path ={CALLBACK_PATH} >
+            <Route exact path={CALLBACK_PATH}>
               <LoginCallback />
             </Route>
-            <SecureRoute path="/home" exact component={Home} />
+            <SecureRoute path="/home" exact>
+              <NavBar />
+              <Home />
+            </SecureRoute>
           </Switch>
         </div>
       </ColorContextProvider>
