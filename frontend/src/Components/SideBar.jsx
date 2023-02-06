@@ -40,7 +40,7 @@ const SideBar = () => {
           }}
         >
           <Badge variant="dot" color="success" overlap="circular">
-            <Avatar>UC</Avatar>
+            <Avatar sx={{ bgcolor: "background.hover", color: 'text.primary' }}>UC</Avatar>
           </Badge>
           <Typography>{"Umesh Chandhankeri"}</Typography>
         </Box>
@@ -62,7 +62,7 @@ const SideBar = () => {
           }}
         >
           <Badge variant="dot" color="success" overlap="circular">
-            <Avatar>UC</Avatar>
+            <Avatar sx={{ bgcolor: "background.hover", color: 'text.primary' }}>UC</Avatar>
           </Badge>
           <Typography>{"Umesh Chandhankeri"}</Typography>
         </Box>

@@ -1,4 +1,4 @@
-import { AppBar, Box, Typography } from "@mui/material";
+import { AppBar, Avatar, Badge, Box, Typography } from "@mui/material";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -35,17 +35,22 @@ const NavBar = () => {
           sx={{ display: { xs: "block", sm: "none" }, margin: 0 }}
         />
       </Box>
-      {mode === "light" ? (
-        <LightModeIcon
-          sx={{ cursor: "pointer" }}
-          onClick={() => toggleMode()}
-        />
-      ) : (
-        <Brightness4Icon
-          sx={{ cursor: "pointer" }}
-          onClick={() => toggleMode()}
-        />
-      )}
+      <Box sx={{ display: "flex", alignItems: "center", gap: "9px" }}>
+        <Badge variant="dot" color="success" overlap="circular">
+          <Avatar sx={{ bgcolor: "background.default", color: 'text.primary' }}>UC</Avatar>
+        </Badge>
+        {mode === "light" ? (
+          <LightModeIcon
+            sx={{ cursor: "pointer" }}
+            onClick={() => toggleMode()}
+          />
+        ) : (
+          <Brightness4Icon
+            sx={{ cursor: "pointer" }}
+            onClick={() => toggleMode()}
+          />
+        )}
+      </Box>
     </AppBar>
   );
 };
