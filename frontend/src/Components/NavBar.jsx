@@ -29,7 +29,7 @@ const NavBar = () => {
             color: "text.primary",
           }}
         >
-          Ping Me
+          Ping Me <TelegramIcon />
         </Typography>
         <TelegramIcon
           sx={{ display: { xs: "block", sm: "none" }, margin: 0 }}
@@ -37,7 +37,9 @@ const NavBar = () => {
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "9px" }}>
         <Badge variant="dot" color="success" overlap="circular">
-          <Avatar sx={{ bgcolor: "background.default", color: 'text.primary' }}>UC</Avatar>
+          <Avatar sx={{ bgcolor: "background.default", color: "text.primary" }}>
+            UC
+          </Avatar>
         </Badge>
         {mode === "light" ? (
           <LightModeIcon

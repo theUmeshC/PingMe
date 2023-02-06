@@ -7,21 +7,27 @@ const SideBar = () => {
   const { messageBoxHandler } = UseContext();
 
   return (
-    <Box flex={1} sx={{ bgcolor: "background.default", minWidth: "250px" }}>
+    <Box
+      flex={1}
+      sx={{ bgcolor: "background.default", minWidth: "250px", height: "100%" }}
+    >
+      <Typography
+        color={"text.primary"}
+        sx={{
+          bgcolor: "background.hover",
+          display: "flex",
+          alignItems:'center',
+          justifyContent: "center",
+          height: "10%",
+        }}
+      >
+        Contacts
+      </Typography>
       <Stack
         direction="column"
         divider={<Divider orientation="horizontal" flexItem />}
+        sx={{ height: "90%", overflow: "auto" }}
       >
-        <Typography
-          color={"text.primary"}
-          sx={{
-            bgcolor: "background.hover",
-            textAlign: "center",
-            padding: "15px 0",
-          }}
-        >
-          Contacts
-        </Typography>
         <Box
           sx={{
             bgcolor: "background.selected",
@@ -30,7 +36,7 @@ const SideBar = () => {
             alignItems: "center",
             gap: "20px",
             padding: "5px",
-            cursor: 'pointer',
+            cursor: "pointer",
             "&:hover": {
               bgcolor: "background.hover",
             },
@@ -40,7 +46,9 @@ const SideBar = () => {
           }}
         >
           <Badge variant="dot" color="success" overlap="circular">
-            <Avatar sx={{ bgcolor: "background.hover", color: 'text.primary' }}>UC</Avatar>
+            <Avatar sx={{ bgcolor: "background.hover", color: "text.primary" }}>
+              UC
+            </Avatar>
           </Badge>
           <Typography>{"Umesh Chandhankeri"}</Typography>
         </Box>
@@ -52,7 +60,7 @@ const SideBar = () => {
             alignItems: "center",
             gap: "20px",
             padding: "5px",
-            cursor: 'pointer',
+            cursor: "pointer",
             "&:hover": {
               bgcolor: "background.hover",
             },
@@ -62,11 +70,12 @@ const SideBar = () => {
           }}
         >
           <Badge variant="dot" color="success" overlap="circular">
-            <Avatar sx={{ bgcolor: "background.hover", color: 'text.primary' }}>UC</Avatar>
+            <Avatar sx={{ bgcolor: "background.hover", color: "text.primary" }}>
+              UC
+            </Avatar>
           </Badge>
           <Typography>{"Umesh Chandhankeri"}</Typography>
         </Box>
-
       </Stack>
     </Box>
   );

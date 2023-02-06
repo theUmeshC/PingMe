@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import { amber, grey } from "@mui/material/colors";
+import { cyan, green, grey } from "@mui/material/colors";
 import { createContext, useContext, useMemo, useState } from "react";
 
 const colorModeContext = createContext();
@@ -22,18 +22,18 @@ export const ColorContextProvider = ({ children }) => {
       mode,
       ...(mode === "light"
         ? {
-            divider: amber[900],
+            divider: cyan[900],
             background: {
-              default: amber[100],
-              Paper: amber[300],
-              selected: amber[200],
-              hover: amber[300],
-              navBg: amber[900],
+              default: cyan[100],
+              Paper: cyan[300],
+              selected: cyan[200],
+              hover: cyan[300],
+              navBg: cyan[900],
             },
             text: {
               primary: "black",
               secondary: grey[900],
-              active: 'green',
+              active: green['A100'],
             },
           }
         : {
@@ -48,7 +48,7 @@ export const ColorContextProvider = ({ children }) => {
             text: {
               primary: "#fff",
               secondary: "rgba(255, 255, 255, 0.3)",
-              active: 'green',
+              active: green['A700'],
             },
           }),
     },

@@ -1,11 +1,23 @@
 import { Divider, Stack } from "@mui/material";
-import React from "react";
+import { useOktaAuth } from "@okta/okta-react";
+import React, { useEffect } from "react";
 import ChatBox from "../Components/ChatBox";
 import SideBar from "../Components/SideBar";
 import { UseContext } from "../Store/Context";
 
 const Home = () => {
-  const { messageBox } = UseContext();
+  const { messageBox, handleUserInfo } = UseContext();
+  const { authState, oktaAuth } = useOktaAuth();
+
+  useEffect(() => {
+    if (!authState || !authState.isAuthenticated) {
+      handleUserInfo(null);
+    } else {
+      oktaAuth.getUser().then((info) => {
+        handleUserInfo(info);
+      });
+    }
+  }, [authState, oktaAuth, handleUserInfo]);
 
   return (
     <>
@@ -28,7 +40,9 @@ const Home = () => {
         <SideBar />
         <ChatBox />
       </Stack>
+
     </>
+    
   );
 };
 
