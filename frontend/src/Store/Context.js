@@ -22,7 +22,6 @@ export const ContextProvider = ({ children }) => {
     }),
     [messageBox, userInfo]
   );
-
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
 
