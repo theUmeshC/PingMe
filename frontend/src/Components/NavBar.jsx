@@ -32,7 +32,7 @@ const NavBar = () => {
           variant="h6"
           sx={{
             display: { xs: "none", sm: "block" },
-            color: "text.primary",
+            color: "text.tertiary",
           }}
         >
           Ping Me <TelegramIcon />

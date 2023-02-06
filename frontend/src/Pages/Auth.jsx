@@ -1,9 +1,12 @@
 import React from "react";
 import { useOktaAuth } from "@okta/okta-react";
+import { useHistory } from "react-router-dom";
 
 const Auth = () => {
   const { authState, oktaAuth } = useOktaAuth();
-  const login = () => oktaAuth.signInWithRedirect({ originalUri: "/Home" });
+  const login = () => oktaAuth.signInWithRedirect({ originalUri: "/home" });
+  const history = useHistory();
+
 
   if (!authState) {
     return <div>Loading authentication...</div>;
@@ -14,7 +17,8 @@ const Auth = () => {
       </div>
     );
   } else {
-    return "You authenticated";
+    history.replace('/home');
+    return "";
   }
 };
 

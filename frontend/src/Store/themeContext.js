@@ -27,12 +27,13 @@ export const ColorContextProvider = ({ children }) => {
               default: cyan[100],
               Paper: cyan[300],
               selected: cyan[200],
-              hover: cyan[300],
+              hover: cyan[500],
               navBg: cyan[900],
             },
             text: {
               primary: "black",
               secondary: grey[900],
+              tertiary: 'white',
               active: green['A100'],
             },
           }
@@ -48,6 +49,7 @@ export const ColorContextProvider = ({ children }) => {
             text: {
               primary: "#fff",
               secondary: "rgba(255, 255, 255, 0.3)",
+              tertiary: '#fff',
               active: green['A700'],
             },
           }),
