@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 
@@ -6,7 +6,7 @@ const Login = ({ handleLogin }) => {
   return (
     <Box
       sx={{
-        bgcolor: "background.default",
+        bgcolor: "skyblue",
         height: "100%",
         width: "100%",
         alignItems: "center",
@@ -15,8 +15,9 @@ const Login = ({ handleLogin }) => {
         flexDirection: "column",
       }}
     >
-      <Typography variant="h3" m={5} sx={{fontFamily: 'Caveat'}}>Welcome to Chat App!</Typography >
-      <button className="loginBtn" onClick={()=> handleLogin()}>Login</button>
+      <Typography variant="h3" sx={{fontFamily: 'Caveat'}}>Welcome to Ping Me</Typography >
+      <Typography variant="h5" mb={5} sx={{fontFamily: 'Caveat'}}>An Awesome Chatting App!! </Typography>
+      <Button variant="contained" className="loginBtn" onClick={()=> handleLogin()}>Login</Button>
     </Box>
   );
 };

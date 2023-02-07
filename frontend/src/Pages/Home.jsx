@@ -2,7 +2,7 @@ import { Divider, Stack } from "@mui/material";
 import { useOktaAuth } from "@okta/okta-react";
 import React, { useEffect } from "react";
 import ChatBox from "../Components/ChatBox";
-import SideBar from "../Components/SideBar";
+import SideBar from "../Layout/SideBar";
 import { UseContext } from "../Store/Context";
 
 const Home = () => {

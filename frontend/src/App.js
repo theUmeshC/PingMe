@@ -19,22 +19,22 @@ function App() {
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-      <ColorContextProvider>
-        <div>
-          <Switch>
-            <Route exact path="/">
-              <Auth />
-            </Route>
-            <Route exact path={CALLBACK_PATH}>
-              <LoginCallback />
-            </Route>
+      <div>
+        <Switch>
+          <Route exact path="/">
+            <Auth />
+          </Route>
+          <Route exact path={CALLBACK_PATH}>
+            <LoginCallback />
+          </Route>
+          <ColorContextProvider>
             <SecureRoute path="/home" exact>
               <NavBar />
               <Home />
             </SecureRoute>
-          </Switch>
-        </div>
-      </ColorContextProvider>
+          </ColorContextProvider>
+        </Switch>
+      </div>
     </Security>
   );
 }
