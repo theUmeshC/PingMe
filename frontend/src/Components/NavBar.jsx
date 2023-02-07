@@ -2,16 +2,23 @@ import { AppBar, Avatar, Badge, Box, Typography } from "@mui/material";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
+import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { ColorContext } from "../Store/themeContext";
 import { UseContext } from "../Store/Context";
+import { withOktaAuth } from "@okta/okta-react";
 
-const NavBar = () => {
+const NavBar = ({ oktaAuth }) => {
   const { mode, toggleMode } = ColorContext();
   const { userInfo } = UseContext();
+  // const {  oktaAuth , } = useOktaAuth();
 
-  const userTag = `${userInfo?.given_name[0]}${userInfo?.family_name[0]}`
-
+  const userTag = `${userInfo?.given_name[0]}${userInfo?.family_name[0]}`;
+  const handleLogout = async () => {
+    await oktaAuth.signOut({
+      postLogoutRedirectUri: window.location.origin + "/",
+    });
+  };
 
   return (
     <AppBar
@@ -58,9 +65,12 @@ const NavBar = () => {
             onClick={() => toggleMode()}
           />
         )}
+        <LogoutIcon sx={{ cursor: "pointer" }} onClick={handleLogout} />
       </Box>
     </AppBar>
   );
 };
 
-export default NavBar;
+export default withOktaAuth(NavBar);
+
+// export default NavBar;

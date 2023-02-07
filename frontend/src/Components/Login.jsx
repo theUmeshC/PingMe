@@ -16,7 +16,7 @@ const Login = ({ handleLogin }) => {
       }}
     >
       <Typography variant="h4">Welcome to Chat App!</Typography>
-      <button className="loginBtn" onClick={()=> handleLogin()}>Login / Sign In</button>
+      <button className="loginBtn" onClick={()=> handleLogin()}>Login</button>
     </Box>
   );
 };
