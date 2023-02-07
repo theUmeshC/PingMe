@@ -11,9 +11,10 @@ import { withOktaAuth } from "@okta/okta-react";
 const NavBar = ({ oktaAuth }) => {
   const { mode, toggleMode } = ColorContext();
   const { userInfo } = UseContext();
-  // const {  oktaAuth , } = useOktaAuth();
 
-  const userTag = `${userInfo?.given_name[0]}${userInfo?.family_name[0]}`;
+  const userTag =
+    userInfo && `${userInfo.given_name[0]}${userInfo.family_name[0]}`;
+
   const handleLogout = async () => {
     await oktaAuth.signOut({
       postLogoutRedirectUri: window.location.origin + "/",
