@@ -10,11 +10,10 @@ import React, { useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiPicker from "emoji-picker-react";
-// import { EmojiStyle } from 'emoji-picker-react';
 
 const ChatBox = () => {
-  const [messageToSend , setMessageToSend] = useState('');
-  const [isEmojiOpen, setEmojiOpen] = useState(true);
+  const [messageToSend, setMessageToSend] = useState("");
+  const [isEmojiOpen, setEmojiOpen] = useState(false);
   const status = "seen";
 
   const handleEmojiBox = () => {
@@ -22,7 +21,7 @@ const ChatBox = () => {
   };
 
   const handleEmojiSelect = (object) => {
-    setMessageToSend((prev) => `${prev}${object.emoji}`)
+    setMessageToSend((prev) => `${prev}${object.emoji}`);
   };
 
   const handleMessageChange = (e) => {
@@ -96,7 +95,13 @@ const ChatBox = () => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ height: "10%", bgcolor: "background.default" }}>
+      <Box
+        sx={{
+          height: "10%",
+          bgcolor: "background.default",
+          minHeight: '50px',
+        }}
+      >
         <Box
           sx={{
             height: "100%",
@@ -122,7 +127,11 @@ const ChatBox = () => {
                 left: "10px",
               }}
             >
-              <EmojiPicker height={300} width="300px" onEmojiClick={handleEmojiSelect}/>
+              <EmojiPicker
+                height={300}
+                width="300px"
+                onEmojiClick={handleEmojiSelect}
+              />
             </Box>
           ) : null}
           <TextField
