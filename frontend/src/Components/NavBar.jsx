@@ -23,7 +23,7 @@ const NavBar = ({ oktaAuth }) => {
 
   return (
     <AppBar
-      position="static"
+      position="stick"
       sx={{
         bgcolor: "background.navBg",
         height: "10vh",
@@ -73,5 +73,3 @@ const NavBar = ({ oktaAuth }) => {
 };
 
 export default withOktaAuth(NavBar);
-
-// export default NavBar;

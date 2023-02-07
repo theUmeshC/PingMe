@@ -35,7 +35,6 @@ const ChatBox = () => {
         sx={{
           bgcolor: "background.hover",
           height: "10%",
-          minHeight: "50px",
           display: "flex",
           flexDirection: "row",
           gap: "10px",
@@ -99,7 +98,6 @@ const ChatBox = () => {
         sx={{
           height: "10%",
           bgcolor: "background.default",
-          minHeight: '50px',
         }}
       >
         <Box
