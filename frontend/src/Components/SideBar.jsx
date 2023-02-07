@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 import { Badge } from "@mui/material";
 import { UseContext } from "../Store/Context";
@@ -11,18 +11,22 @@ const SideBar = () => {
       flex={1}
       sx={{ bgcolor: "background.default", minWidth: "250px", height: "100%" }}
     >
-      <Typography
-        color={"text.primary"}
+      <AppBar
+        position="static"
         sx={{
           bgcolor: "background.hover",
-          display: "flex",
-          alignItems:'center',
-          justifyContent: "center",
           height: "10%",
         }}
       >
-        Contacts
-      </Typography>
+        <Typography
+          color={"text.primary"}
+          sx={{
+            margin: 'auto',
+          }}
+        >
+          Contacts
+        </Typography>
+      </AppBar>
       <Stack
         direction="column"
         divider={<Divider orientation="horizontal" flexItem />}
@@ -69,7 +73,7 @@ const SideBar = () => {
             messageBoxHandler();
           }}
         >
-          <Badge variant="dot" color="success" overlap="circular">
+          <Badge variant="dot" color="error" overlap="circular">
             <Avatar sx={{ bgcolor: "background.hover", color: "text.primary" }}>
               UC
             </Avatar>
