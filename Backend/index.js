@@ -4,9 +4,9 @@ import { config } from "dotenv";
 import bodyParser from "body-parser";
 
 import sequelize from "./utils/database.js";
-import router from "./Routes/AuthRoutes.js";
 import chatRouter from "./Routes/ChatRoutes.js";
 import { oktaAuthRequired } from "./middleware/jwtVerifier.js";
+import userRouter from "./Routes/UserRouter.js";
 
 config();
 
@@ -31,9 +31,9 @@ app.use("/", oktaAuthRequired, (req, res, next) => {
   res.json(user);
 });
 
-app.use("/users", router);
+app.use("/users", oktaAuthRequired, userRouter);
 
-app.use("/chat", chatRouter);
+app.use("/chat", oktaAuthRequired, chatRouter);
 
 sequelize
   // .sync({alter: true})
