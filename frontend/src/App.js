@@ -1,7 +1,7 @@
 import { Route, Switch, useHistory } from "react-router-dom";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
-import NavBar from "./Components/NavBar";
+import NavBar from "./Layout/NavBar";
 import Auth from "./Pages/Auth";
 import Home from "./Pages/Home";
 import { ColorContextProvider } from "./Store/themeContext";
@@ -29,8 +29,8 @@ function App() {
             <LoginCallback />
           </Route>
           <ColorContextProvider>
-            <SecureRoute path="/home" exact>
               <NavBar />
+            <SecureRoute path="/home" exact>
               <Home />
             </SecureRoute>
             <SecureRoute path="/addUsers">

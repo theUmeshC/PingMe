@@ -6,6 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { ColorContext } from "../Store/themeContext";
 import { withOktaAuth } from "@okta/okta-react";
+import { Link } from "react-router-dom";
 
 const NavBar = ({ oktaAuth, userInfo }) => {
   const { mode, toggleMode } = ColorContext();
@@ -34,15 +35,21 @@ const NavBar = ({ oktaAuth, userInfo }) => {
       }}
     >
       <Box sx={{ display: "flex" }}>
-        <Typography
-          variant="h6"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            color: "text.tertiary",
-          }}
-        >
-          Ping Me <TelegramIcon />
-        </Typography>
+        <Link to="/home">
+          <Typography
+            variant="h6"
+            sx={{
+              display: {
+                xs: "none",
+                sm: "block",
+                cursor: "pointer",
+              },
+              color: "text.tertiary",
+            }}
+          >
+            Ping Me <TelegramIcon />
+          </Typography>
+        </Link>
         <TelegramIcon
           sx={{ display: { xs: "block", sm: "none" }, margin: 0 }}
         />
