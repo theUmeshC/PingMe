@@ -26,14 +26,14 @@ app.use(
 
 app.use(express.json());
 
-app.use("/", oktaAuthRequired, (req, res, next) => {
+app.use("/users", userRouter);
+
+app.use("/chat", oktaAuthRequired, chatRouter);
+
+app.use("/", oktaAuthRequired, (req, res) => {
   const { user } = req.body;
   res.json(user);
 });
-
-app.use("/users", oktaAuthRequired, userRouter);
-
-app.use("/chat", oktaAuthRequired, chatRouter);
 
 sequelize
   // .sync({alter: true})

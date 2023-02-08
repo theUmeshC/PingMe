@@ -23,30 +23,27 @@ const SideBar = () => {
   }, [authState, oktaAuth]);
 
   useEffect(() => {
-    const fetchFriends = async () => {
-      const fetchData = async () => {
-        if (user) {
-          fetch("http://localhost:9000/", {
-            method: "POST",
-            mode: "cors",
-            credentials: "include",
-            headers: {
-              Authorization: `Bearer ${authState.accessToken.accessToken}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ user: user }),
+    const fetchData = async () => {
+      if (user) {
+        fetch("http://localhost:9000/", {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${authState.accessToken.accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user: user }),
+        })
+          .then((res) => {
+            return res.json();
           })
-            .then((res) => {
-              return res.json();
-            })
-            .then((data) => {
-              console.log(data);
-            });
-        }
-      };
-      await fetchData();
+          .then((data) => {
+            console.log(data);
+          });
+      }
     };
-    fetchFriends();
+    fetchData();
   }, [user, authState]);
 
   return (

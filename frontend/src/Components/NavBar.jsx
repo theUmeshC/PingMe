@@ -5,12 +5,10 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { ColorContext } from "../Store/themeContext";
-import { UseContext } from "../Store/Context";
 import { withOktaAuth } from "@okta/okta-react";
 
-const NavBar = ({ oktaAuth }) => {
+const NavBar = ({ oktaAuth, userInfo }) => {
   const { mode, toggleMode } = ColorContext();
-  const { userInfo } = UseContext();
 
   const userTag =
     userInfo && `${userInfo.given_name[0]}${userInfo.family_name[0]}`;

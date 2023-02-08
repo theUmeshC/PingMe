@@ -4,13 +4,20 @@ import sequelize from "../utils/database.js";
 
 const Users = sequelize.define("Users", {
   user_id: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     primaryKey: true,
   },
   username: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
+  },
+  first_name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  last_name: {
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   email: {
     type: Sequelize.STRING,
