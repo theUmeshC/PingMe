@@ -13,11 +13,10 @@ export const ContextProvider = ({ children }) => {
     () => ({
       messageBox,
       userInfo,
-      messageBoxHandler: () =>
-        setMessageBox((prevState) => (prevState === true ? false : true)),
-      handleUserInfo: ((user) => {
+      messageBoxHandler: () => setMessageBox((prevState) => !prevState),
+      handleUserInfo: (user) => {
         setUserInfo(user);
-      })
+      },
     }),
     [messageBox, userInfo]
   );
@@ -26,5 +25,4 @@ export const ContextProvider = ({ children }) => {
 
 export default Context;
 
-export const UseContext = () => useContext(Context);
-
+export const SubContext = () => useContext(Context);

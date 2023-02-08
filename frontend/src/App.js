@@ -6,6 +6,7 @@ import Auth from "./Pages/Auth";
 import Home from "./Pages/Home";
 import { ColorContextProvider } from "./Store/themeContext";
 import { oktaConfig } from "./Lib/oktaConfig";
+import AddUsers from "./Pages/AddUsers";
 
 const CALLBACK_PATH = "/login/callback";
 
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-      <div>
+      <>
         <Switch>
           <Route exact path="/">
             <Auth />
@@ -32,9 +33,12 @@ function App() {
               <NavBar />
               <Home />
             </SecureRoute>
+            <SecureRoute path="/addUsers">
+              <AddUsers />
+            </SecureRoute>
           </ColorContextProvider>
         </Switch>
-      </div>
+      </>
     </Security>
   );
 }

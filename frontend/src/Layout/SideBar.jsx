@@ -1,11 +1,21 @@
-import { AppBar, Avatar, Box, Divider, Stack, Typography } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Divider,
+  Fab,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Badge } from "@mui/material";
-import { UseContext } from "../Store/Context";
+import { SubContext } from "../Store/Context";
 import { useOktaAuth } from "@okta/okta-react";
+import { Link } from "react-router-dom";
+import MessageIcon from "@mui/icons-material/Message";
 
 const SideBar = () => {
-  const { messageBoxHandler } = UseContext();
+  const { messageBoxHandler } = SubContext();
   const [user, setUser] = useState(null);
   const { authState, oktaAuth } = useOktaAuth();
 
@@ -51,6 +61,25 @@ const SideBar = () => {
       flex={1}
       sx={{ bgcolor: "background.default", minWidth: "250px", height: "100%" }}
     >
+      <Link to="/addUsers">
+        <Fab
+          aria-label="add"
+          sx={{
+            position: "absolute",
+            bottom: "10px",
+            left: "10px",
+            bgcolor: "background.hover",
+            color: "white",
+            height: "50px",
+            width: "50px",
+            "&:hover": {
+              bgcolor: "background.selected",
+            },
+          }}
+        >
+          <MessageIcon />
+        </Fab>
+      </Link>
       <AppBar
         position="static"
         sx={{
@@ -90,7 +119,12 @@ const SideBar = () => {
           }}
         >
           <Badge variant="dot" color="success" overlap="circular">
-            <Avatar sx={{ bgcolor: "background.hover", color: "text.primary" }}>
+            <Avatar
+              sx={{
+                bgcolor: "background.hover",
+                color: "text.primary",
+              }}
+            >
               UC
             </Avatar>
           </Badge>

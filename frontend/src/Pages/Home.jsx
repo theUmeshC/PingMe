@@ -1,14 +1,13 @@
-import { Divider, Fab, Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { useOktaAuth } from "@okta/okta-react";
 import React, { useEffect, useState } from "react";
 import ChatBox from "../Components/ChatBox";
 import SideBar from "../Layout/SideBar";
-import { UseContext } from "../Store/Context";
-import MessageIcon from "@mui/icons-material/Message";
+import { SubContext } from "../Store/Context";
 import axios from "axios";
 
 const Home = () => {
-  const { messageBox } = UseContext();
+  const { messageBox } = SubContext();
   const { authState, oktaAuth } = useOktaAuth();
   const [user, setUser] = useState(null);
 
@@ -48,21 +47,6 @@ const Home = () => {
 
   return (
     <>
-      <Fab
-        aria-label="add"
-        sx={{
-          position: "absolute",
-          bottom: "7px",
-          left: "7px",
-          bgcolor: "background.hover",
-          color: "white",
-          "&:hover": {
-            bgcolor: "background.selected",
-          },
-        }}
-      >
-        <MessageIcon />
-      </Fab>
       <Stack
         direction="row"
         justifyContent="space-evenly"

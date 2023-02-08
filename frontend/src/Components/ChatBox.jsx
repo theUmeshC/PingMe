@@ -10,11 +10,14 @@ import React, { useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiPicker from "emoji-picker-react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { SubContext } from "../Store/Context";
 
 const ChatBox = () => {
   const [messageToSend, setMessageToSend] = useState("");
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const status = "seen";
+  const { messageBoxHandler } = SubContext();
 
   const handleEmojiBox = () => {
     setEmojiOpen((prev) => !prev);
@@ -42,6 +45,11 @@ const ChatBox = () => {
           padding: "0 20px",
         }}
       >
+        <ArrowBackIcon
+          sx={{ display: { sm: "none", xs: "flex", cursor: "pointer" } }}
+          onClick={() => messageBoxHandler()}
+        />
+
         <Badge variant="dot" color="success" overlap="circular">
           <Avatar
             sx={{ bgcolor: "background.selected", color: "text.primary" }}

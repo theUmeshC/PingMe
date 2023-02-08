@@ -49,7 +49,14 @@ const NavBar = ({ oktaAuth, userInfo }) => {
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "9px" }}>
         <Badge variant="dot" color="success" overlap="circular">
-          <Avatar sx={{ bgcolor: "background.default", color: "text.primary" }}>
+          <Avatar
+            sx={{
+              bgcolor: "background.default",
+              color: "text.primary",
+              height: "30px",
+              width: "30px",
+            }}
+          >
             {userTag}
           </Avatar>
         </Badge>
