@@ -1,10 +1,53 @@
 import { AppBar, Avatar, Box, Divider, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "@mui/material";
 import { UseContext } from "../Store/Context";
+import { useOktaAuth } from "@okta/okta-react";
 
 const SideBar = () => {
   const { messageBoxHandler } = UseContext();
+  const [user, setUser] = useState(null);
+  const { authState, oktaAuth } = useOktaAuth();
+
+  useEffect(() => {
+    const getUser = async () => {
+      if (!authState || !authState.isAuthenticated) {
+        setUser(null);
+      } else {
+        oktaAuth.getUser().then((info) => {
+          setUser(info);
+        });
+      }
+    };
+    getUser();
+  }, [authState, oktaAuth]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      const fetchData = async () => {
+        if (user) {
+          fetch("http://localhost:9000/", {
+            method: "POST",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${authState.accessToken.accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user: user }),
+          })
+            .then((res) => {
+              return res.json();
+            })
+            .then((data) => {
+              console.log(data);
+            });
+        }
+      };
+      await fetchData();
+    };
+    fetchFriends();
+  }, [user, authState]);
 
   return (
     <Box
@@ -21,7 +64,7 @@ const SideBar = () => {
         <Typography
           color={"text.primary"}
           sx={{
-            margin: 'auto',
+            margin: "auto",
           }}
         >
           Contacts

@@ -23,7 +23,7 @@ const NavBar = ({ oktaAuth }) => {
 
   return (
     <AppBar
-      position="stick"
+      position="sticky"
       sx={{
         bgcolor: "background.navBg",
         height: "10vh",

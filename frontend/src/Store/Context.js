@@ -9,7 +9,6 @@ export const ContextProvider = ({ children }) => {
   const [messageBox, setMessageBox] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
-
   const contextValue = useMemo(
     () => ({
       messageBox,
