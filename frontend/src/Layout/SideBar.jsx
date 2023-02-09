@@ -3,21 +3,25 @@ import {
   Avatar,
   Box,
   Divider,
-  Fab,
   Stack,
   Typography,
-  Badge
+  Badge,
+  SpeedDial,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SubContext } from "../Store/Context";
 import { useOktaAuth } from "@okta/okta-react";
-import { Link } from "react-router-dom";
-import MessageIcon from "@mui/icons-material/Message";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import GroupsIcon from "@mui/icons-material/Groups";
+import { useHistory } from "react-router-dom";
 
 const SideBar = () => {
   const { messageBoxHandler } = SubContext();
   const [user, setUser] = useState(null);
   const { authState, oktaAuth } = useOktaAuth();
+  const history = useHistory();
 
   useEffect(() => {
     const getUser = async () => {
@@ -61,25 +65,26 @@ const SideBar = () => {
       flex={1}
       sx={{ bgcolor: "background.default", minWidth: "250px", height: "100%" }}
     >
-      <Link to="/addUsers">
-        <Fab
-          aria-label="add"
-          sx={{
-            position: "absolute",
-            bottom: "10px",
-            left: "10px",
-            bgcolor: "background.hover",
-            color: "white",
-            height: "50px",
-            width: "50px",
-            "&:hover": {
-              bgcolor: "background.selected",
-            },
-          }}
-        >
-          <MessageIcon />
-        </Fab>
-      </Link>
+      <SpeedDial
+        ariaLabel="SpeedDial basic example"
+        sx={{ position: "absolute", bottom: 16, left: 16 }}
+        icon={<SpeedDialIcon />}
+      >
+        <SpeedDialAction
+          sx={{ bgcolor: "background.hover" }}
+          key="addUser"
+          icon={<AccountCircleIcon sx={{ color: "text.primary" }} />}
+          tooltipTitle="Add Contact"
+          onClick={() => history.replace("/addContact")}
+        />
+        <SpeedDialAction
+          sx={{ bgcolor: "background.hover" }}
+          key="addGroup"
+          icon={<GroupsIcon sx={{ color: "text.primary" }} />}
+          tooltipTitle="Create Group"
+          onClick={() => history.replace("/addGroup")}
+        />
+      </SpeedDial>
       <AppBar
         position="static"
         sx={{
