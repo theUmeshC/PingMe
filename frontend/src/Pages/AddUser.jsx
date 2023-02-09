@@ -61,9 +61,7 @@ const AddUsers = () => {
               color: "text.primary",
               border: "1px solid ",
             }}
-          >
-            UC
-          </Avatar>
+          ></Avatar>
           <Typography sx={{ textAlign: "center" }}>
             {"Umesh Chandhankeri"}
           </Typography>
