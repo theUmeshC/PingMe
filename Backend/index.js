@@ -30,11 +30,6 @@ app.use("/users", userRouter);
 
 app.use("/chat", oktaAuthRequired, chatRouter);
 
-app.use("/", oktaAuthRequired, (req, res) => {
-  const { user } = req.body;
-  res.json(user);
-});
-
 sequelize
   // .sync({alter: true})
   .sync()

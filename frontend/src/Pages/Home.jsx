@@ -10,6 +10,7 @@ const Home = () => {
   const { messageBox } = SubContext();
   const { authState, oktaAuth } = useOktaAuth();
   const [user, setUser] = useState(null);
+  // const [dbUser, setDbUser] = useState(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -39,7 +40,10 @@ const Home = () => {
           },
         });
 
-        response.then((val) => console.log(val));
+        response.then((val) => {
+          // setDbUser(val.data);
+          localStorage.setItem("user_id", JSON.stringify(val.data.user_id));
+        });
       }
     };
     fetchData();

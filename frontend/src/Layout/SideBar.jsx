@@ -8,9 +8,8 @@ import {
   Badge,
   SpeedDial,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { SubContext } from "../Store/Context";
-import { useOktaAuth } from "@okta/okta-react";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -19,46 +18,7 @@ import { useHistory } from "react-router-dom";
 
 const SideBar = () => {
   const { messageBoxHandler } = SubContext();
-  const [user, setUser] = useState(null);
-  const { authState, oktaAuth } = useOktaAuth();
   const history = useHistory();
-
-  useEffect(() => {
-    const getUser = async () => {
-      if (!authState || !authState.isAuthenticated) {
-        setUser(null);
-      } else {
-        oktaAuth.getUser().then((info) => {
-          setUser(info);
-        });
-      }
-    };
-    getUser();
-  }, [authState, oktaAuth]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (user) {
-        fetch("http://localhost:9000/", {
-          method: "POST",
-          mode: "cors",
-          credentials: "include",
-          headers: {
-            Authorization: `Bearer ${authState.accessToken.accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ user: user }),
-        })
-          .then((res) => {
-            return res.json();
-          })
-          .then((data) => {
-            console.log(data);
-          });
-      }
-    };
-    fetchData();
-  }, [user, authState]);
 
   return (
     <Box

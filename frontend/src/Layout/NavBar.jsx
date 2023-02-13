@@ -5,16 +5,34 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import LogoutIcon from "@mui/icons-material/Logout";
 import React from "react";
 import { ColorContext } from "../Store/themeContext";
-import { withOktaAuth } from "@okta/okta-react";
+import { useOktaAuth, withOktaAuth } from "@okta/okta-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { SubContext } from "../Store/Context";
 
-const NavBar = ({ oktaAuth, userInfo }) => {
+const NavBar = ({ userInfo }) => {
   const { mode, toggleMode } = ColorContext();
+  const { authState, oktaAuth } = useOktaAuth();
+
+  const { userId } = SubContext();
 
   const userTag =
     userInfo && `${userInfo.given_name[0]}${userInfo.family_name[0]}`;
 
   const handleLogout = async () => {
+    const response = axios({
+      method: "post",
+      url: "http://localhost:9000/users/logout",
+      headers: {
+        Authorization: `Bearer ${authState.accessToken.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      data: {
+        userId,
+      },
+    });
+    localStorage.removeItem("user_id");
+    response.then((val) => console.log(val));
     await oktaAuth.signOut({
       postLogoutRedirectUri: window.location.origin + "/",
     });

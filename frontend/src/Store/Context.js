@@ -7,18 +7,13 @@ const Context = createContext({
 
 export const ContextProvider = ({ children }) => {
   const [messageBox, setMessageBox] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
 
   const contextValue = useMemo(
     () => ({
       messageBox,
-      userInfo,
       messageBoxHandler: () => setMessageBox((prevState) => !prevState),
-      handleUserInfo: (user) => {
-        setUserInfo(user);
-      },
     }),
-    [messageBox, userInfo]
+    [messageBox]
   );
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };

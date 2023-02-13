@@ -27,7 +27,6 @@ const Users = sequelize.define("Users", {
   status: {
     type: Sequelize.STRING,
     allowNull: false,
-    default: 'offline',
   }
 });
 
