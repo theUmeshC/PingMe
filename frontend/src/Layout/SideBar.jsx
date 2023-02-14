@@ -17,11 +17,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 const SideBar = ({ user }) => {
   const userId = user && user.user_id;
   const { authState } = useOktaAuth();
-  const { messageBoxHandler } = SubContext();
+  const { messageBoxHandler, friendHandler } = SubContext();
   const history = useHistory();
   const [friends, setFriends] = useState(null);
 
@@ -41,6 +42,11 @@ const SideBar = ({ user }) => {
       response.then((val) => setFriends(val.data));
     }
   }, [userId, authState]);
+
+  const openMessageHandler = (friend) => {
+    messageBoxHandler();
+    friendHandler(friend);
+  };
 
   return (
     <Box
@@ -103,8 +109,9 @@ const SideBar = ({ user }) => {
                   bgcolor: "background.hover",
                 },
               }}
+              key={uuidv4()}
               onClick={() => {
-                messageBoxHandler();
+                openMessageHandler(friend);
               }}
             >
               {friend.status === "online" ? (

@@ -13,11 +13,10 @@ const NavBar = ({ user }) => {
   const { mode, toggleMode } = ColorContext();
   const { authState, oktaAuth } = useOktaAuth();
   const userId = user && user.user_id;
-  const userTag =
-    user && `${user.firstname[0]}${user.lastname[0]}`;
+  const userTag = user && `${user.firstname[0]}${user.lastname[0]}`;
 
   const handleLogout = async () => {
-    const response = axios({
+    await axios({
       method: "post",
       url: "http://localhost:9000/users/logout",
       headers: {
@@ -28,8 +27,6 @@ const NavBar = ({ user }) => {
         userId,
       },
     });
-    localStorage.removeItem("user_id");
-    response.then((val) => console.log(val));
     await oktaAuth.signOut({
       postLogoutRedirectUri: window.location.origin + "/",
     });

@@ -6,18 +6,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiPicker from "emoji-picker-react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { SubContext } from "../Store/Context";
+import axios from "axios";
+import { useOktaAuth } from "@okta/okta-react";
 
 const ChatBox = () => {
   const [messageToSend, setMessageToSend] = useState("");
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const status = "seen";
-  const { messageBoxHandler } = SubContext();
+  const { messageBoxHandler, friend } = SubContext();
+  const { authState } = useOktaAuth();
+  const [messages, setMessages] = useState([]);
 
   const handleEmojiBox = () => {
     setEmojiOpen((prev) => !prev);
@@ -30,6 +34,44 @@ const ChatBox = () => {
   const handleMessageChange = (e) => {
     setMessageToSend(e.target.value);
   };
+
+  const handleSendMessage = () => {
+    const response = axios({
+      method: "post",
+      url: "http://localhost:9000/chat/sendMessage",
+      headers: {
+        Authorization: `Bearer ${authState.accessToken.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      data: {
+        chatId: friend.chat_id,
+        senderId: friend.user_id,
+        message: messageToSend,
+      },
+    });
+    response.then((messages) => {
+      setMessages(messages.data);
+    });
+  };
+
+  useEffect(() => {
+    if (friend) {
+      const response = axios({
+        method: "post",
+        url: "http://localhost:9000/chat/getMessages",
+        headers: {
+          Authorization: `Bearer ${authState.accessToken.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          chatId: friend.chat_id,
+        },
+      });
+      response.then((messages) => {
+        setMessages(messages.data);
+      });
+    }
+  }, [authState, friend]);
 
   return (
     <Box flex={3} sx={{ bgcolor: "background.default" }}>
@@ -47,17 +89,17 @@ const ChatBox = () => {
       >
         <ArrowBackIcon
           sx={{ display: { sm: "none", xs: "flex", cursor: "pointer" } }}
-          onClick={() => messageBoxHandler()}
+          onClick={() => messageBoxHandler(null)}
         />
 
         <Badge variant="dot" color="success" overlap="circular">
           <Avatar
             sx={{ bgcolor: "background.selected", color: "text.primary" }}
           >
-            UC
+            {friend &&`${friend?.firstname[0]}${friend?.lastname[0]}`}
           </Avatar>
         </Badge>
-        <Typography color={"text.primary"}>Mahesh</Typography>
+        <Typography color={"text.primary"}>{friend?.username}</Typography>
       </AppBar>
       <Box
         sx={{
@@ -68,39 +110,58 @@ const ChatBox = () => {
           flexDirection: "column",
         }}
       >
-        <Box
-          sx={{
-            margin: "10px",
-            bgcolor: "background.hover",
-            padding: "5px",
-            color: "text.primary",
-          }}
-        >
-          <Typography variant="span" sx={{ fontSize: "15px" }}>
-            Umesh
-          </Typography>
-          <Typography variant="h6" sx={{ fontSize: "18px" }}>
-            hi
-          </Typography>
-          <Typography variant="h6" align="right" sx={{ fontSize: "12px" }}>
-            {status}
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            margin: "10px",
-            bgcolor: "background.selected",
-            padding: "5px",
-            color: "text.primary",
-          }}
-        >
-          <Typography variant="h6" align="right" sx={{ fontSize: "18px" }}>
-            hi
-          </Typography>
-          <Typography variant="h6" align="right" sx={{ fontSize: "12px" }}>
-            {status}
-          </Typography>
-        </Box>
+        {messages &&
+          messages.map((message) =>
+            message.sender_id === friend.user_id ? (
+              <Box
+                sx={{
+                  margin: "10px",
+                  bgcolor: "background.selected",
+                  padding: "5px",
+                  color: "text.primary",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  align="right"
+                  sx={{ fontSize: "18px" }}
+                >
+                  {message.messages}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  align="right"
+                  sx={{ fontSize: "12px" }}
+                >
+                  {/* {message.timestamp} */}
+                  {status}
+                </Typography>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  margin: "10px",
+                  bgcolor: "background.hover",
+                  padding: "5px",
+                  color: "text.primary",
+                }}
+              >
+                <Typography variant="span" sx={{ fontSize: "15px" }}>
+                  Umesh
+                </Typography>
+                <Typography variant="h6" sx={{ fontSize: "18px" }}>
+                  {message.messages}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  align="right"
+                  sx={{ fontSize: "12px" }}
+                >
+                  {message.timestamp}
+                </Typography>
+              </Box>
+            )
+          )}
       </Box>
       <Box
         sx={{
@@ -151,7 +212,12 @@ const ChatBox = () => {
             }}
             onChange={handleMessageChange}
           />
-          <SendIcon />
+          <SendIcon
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={handleSendMessage}
+          />
         </Box>
       </Box>
     </Box>
