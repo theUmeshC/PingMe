@@ -8,16 +8,13 @@ import { ColorContext } from "../Store/themeContext";
 import { useOktaAuth, withOktaAuth } from "@okta/okta-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { SubContext } from "../Store/Context";
 
-const NavBar = ({ userInfo }) => {
+const NavBar = ({ user }) => {
   const { mode, toggleMode } = ColorContext();
   const { authState, oktaAuth } = useOktaAuth();
-
-  const { userId } = SubContext();
-
+  const userId = user && user.user_id;
   const userTag =
-    userInfo && `${userInfo.given_name[0]}${userInfo.family_name[0]}`;
+    user && `${user.firstname[0]}${user.lastname[0]}`;
 
   const handleLogout = async () => {
     const response = axios({
@@ -82,7 +79,7 @@ const NavBar = ({ userInfo }) => {
               width: "30px",
             }}
           >
-            {userTag}
+            <Typography>{userTag}</Typography>
           </Avatar>
         </Badge>
         {mode === "light" ? (

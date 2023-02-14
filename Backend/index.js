@@ -3,7 +3,6 @@ import cors from "cors";
 import { config } from "dotenv";
 import bodyParser from "body-parser";
 
-import sequelize from "./utils/database.js";
 import chatRouter from "./Routes/ChatRoutes.js";
 import { oktaAuthRequired } from "./middleware/jwtVerifier.js";
 import userRouter from "./Routes/UserRouter.js";
@@ -30,13 +29,6 @@ app.use("/users", userRouter);
 
 app.use("/chat", oktaAuthRequired, chatRouter);
 
-sequelize
-  // .sync({alter: true})
-  .sync()
-  .then(() => {
-    console.log("connected to database successfully");
-    app.listen(port, () => {
-      console.log(port);
-    });
-  })
-  .catch((err) => console.log(err));
+app.listen(port, () => {
+  console.log(port)
+});

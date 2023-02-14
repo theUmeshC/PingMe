@@ -7,10 +7,10 @@ import axios from "axios";
 import { useOktaAuth } from "@okta/okta-react";
 import { v4 as uuidv4 } from "uuid";
 
-const AddUsers = () => {
+const AddUsers = ({ user }) => {
   const [users, setUsers] = useState(null);
   const { authState } = useOktaAuth();
-  const userId = JSON.parse(localStorage.getItem("user_id"));
+  const userId = user.user_id;
 
   useEffect(() => {
     if (userId) {
@@ -29,8 +29,7 @@ const AddUsers = () => {
     }
   }, [authState, userId]);
 
-  const addUserHandler = (id) => {
-    console.log(userId, "jdsgajhd", id);
+  const addFriendHandler = (id) => {
     if (userId && id) {
       const response = axios({
         method: "post",
@@ -97,7 +96,7 @@ const AddUsers = () => {
                 },
               }}
               onClick={() => {
-                addUserHandler(user.user_id);
+                addFriendHandler(user.user_id);
               }}
             >
               <Avatar
@@ -107,7 +106,7 @@ const AddUsers = () => {
                   border: "1px solid ",
                 }}
               >
-                {`${user.first_name[0]}${user.last_name[0]}`}
+                {`${user.firstname[0]}${user.lastname[0]}`}
               </Avatar>
               <Typography sx={{ textAlign: "center" }}>
                 {user.username}

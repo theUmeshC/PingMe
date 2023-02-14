@@ -7,16 +7,20 @@ import Home from "./Pages/Home";
 import { ColorContextProvider } from "./Store/themeContext";
 import { oktaConfig } from "./Lib/oktaConfig";
 import AddUser from "./Pages/AddUser";
+import { useCallback, useState } from "react";
 
 const CALLBACK_PATH = "/login/callback";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
 function App() {
+  const [user, setUser] = useState(null);
   const history = useHistory();
   const restoreOriginalUri = async (_oktaAuth, originalUri) => {
     history.replace(toRelativeUrl(originalUri || "/", window.location.origin));
   };
+
+  const handleUser = useCallback((userInfo) => setUser(userInfo), []);
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
@@ -29,12 +33,12 @@ function App() {
             <LoginCallback />
           </Route>
           <ColorContextProvider>
-              <NavBar />
+            <NavBar user={user} />
             <SecureRoute path="/home" exact>
-              <Home />
+              <Home updateUser={handleUser} />
             </SecureRoute>
             <SecureRoute path="/addContact">
-              <AddUser />
+              <AddUser user={user} />
             </SecureRoute>
           </ColorContextProvider>
         </Switch>

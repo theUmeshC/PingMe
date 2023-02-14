@@ -6,11 +6,11 @@ import SideBar from "../Layout/SideBar";
 import { SubContext } from "../Store/Context";
 import axios from "axios";
 
-const Home = () => {
+const Home = ({ updateUser, dUser }) => {
   const { messageBox } = SubContext();
   const { authState, oktaAuth } = useOktaAuth();
   const [user, setUser] = useState(null);
-  // const [dbUser, setDbUser] = useState(null);
+  const [dbUser, setDbUser] = useState(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -41,13 +41,13 @@ const Home = () => {
         });
 
         response.then((val) => {
-          // setDbUser(val.data);
-          localStorage.setItem("user_id", JSON.stringify(val.data.user_id));
+          updateUser(val.data);
+          setDbUser(val.data)
         });
       }
     };
     fetchData();
-  }, [user, authState]);
+  }, [user, authState, updateUser]);
 
   return (
     <>
@@ -58,7 +58,7 @@ const Home = () => {
         divider={<Divider orientation="vertical" flexItem />}
         sx={{ display: { sm: "none", xs: "flex" } }}
       >
-        {messageBox === false ? <SideBar /> : <ChatBox />}
+        {messageBox === false ? <SideBar user={dbUser} /> : <ChatBox />}
       </Stack>
       <Stack
         direction="row"
@@ -67,7 +67,7 @@ const Home = () => {
         divider={<Divider orientation="vertical" flexItem />}
         sx={{ display: { sm: "flex", xs: "none" } }}
       >
-        <SideBar />
+        <SideBar user={dbUser} />
         <ChatBox />
       </Stack>
     </>

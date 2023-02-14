@@ -8,17 +8,39 @@ import {
   Badge,
   SpeedDial,
 } from "@mui/material";
-import React from "react";
+import { useOktaAuth } from "@okta/okta-react";
+import React, { useEffect, useState } from "react";
 import { SubContext } from "../Store/Context";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
-const SideBar = () => {
+const SideBar = ({ user }) => {
+  const userId = user && user.user_id;
+  const { authState } = useOktaAuth();
   const { messageBoxHandler } = SubContext();
   const history = useHistory();
+  const [friends, setFriends] = useState(null);
+
+  useEffect(() => {
+    if (userId) {
+      const response = axios({
+        method: "post",
+        url: "http://localhost:9000/chat/getFriends",
+        headers: {
+          Authorization: `Bearer ${authState.accessToken.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          userId,
+        },
+      });
+      response.then((val) => setFriends(val.data));
+    }
+  }, [userId, authState]);
 
   return (
     <Box
@@ -66,59 +88,51 @@ const SideBar = () => {
         divider={<Divider orientation="horizontal" flexItem />}
         sx={{ height: "90%", overflow: "auto" }}
       >
-        <Box
-          sx={{
-            bgcolor: "background.selected",
-            color: "text.primary",
-            display: "flex",
-            alignItems: "center",
-            gap: "20px",
-            padding: "5px",
-            cursor: "pointer",
-            "&:hover": {
-              bgcolor: "background.hover",
-            },
-          }}
-          onClick={() => {
-            messageBoxHandler();
-          }}
-        >
-          <Badge variant="dot" color="success" overlap="circular">
-            <Avatar
+        {friends &&
+          friends.map((friend) => (
+            <Box
               sx={{
-                bgcolor: "background.hover",
+                bgcolor: "background.selected",
                 color: "text.primary",
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
+                padding: "5px",
+                cursor: "pointer",
+                "&:hover": {
+                  bgcolor: "background.hover",
+                },
+              }}
+              onClick={() => {
+                messageBoxHandler();
               }}
             >
-              UC
-            </Avatar>
-          </Badge>
-          <Typography>{"Umesh Chandhankeri"}</Typography>
-        </Box>
-        <Box
-          sx={{
-            bgcolor: "background.selected",
-            color: "text.primary",
-            display: "flex",
-            alignItems: "center",
-            gap: "20px",
-            padding: "5px",
-            cursor: "pointer",
-            "&:hover": {
-              bgcolor: "background.hover",
-            },
-          }}
-          onClick={() => {
-            messageBoxHandler();
-          }}
-        >
-          <Badge variant="dot" color="error" overlap="circular">
-            <Avatar sx={{ bgcolor: "background.hover", color: "text.primary" }}>
-              UC
-            </Avatar>
-          </Badge>
-          <Typography>{"Umesh Chandhankeri"}</Typography>
-        </Box>
+              {friend.status === "online" ? (
+                <Badge variant="dot" color="success" overlap="circular">
+                  <Avatar
+                    sx={{
+                      bgcolor: "background.hover",
+                      color: "text.primary",
+                    }}
+                  >
+                    {`${friend.firstname[0]}${friend.lastname[0]}`}
+                  </Avatar>
+                </Badge>
+              ) : (
+                <Badge variant="dot" color="error" overlap="circular">
+                  <Avatar
+                    sx={{
+                      bgcolor: "background.hover",
+                      color: "text.primary",
+                    }}
+                  >
+                    {`${friend.firstname[0]}${friend.lastname[0]}`}
+                  </Avatar>
+                </Badge>
+              )}
+              <Typography>{friend.username}</Typography>
+            </Box>
+          ))}
       </Stack>
     </Box>
   );
