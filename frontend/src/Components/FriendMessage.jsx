@@ -9,7 +9,8 @@ const FriendMessage = ({message, friend}) => {
         bgcolor: "background.hover",
         padding: "5px",
         color: "text.primary",
-        width: '70%'
+        width: '70%',
+        borderRadius: '5px'
       }}
     >
       <Typography variant="span" sx={{ fontSize: "14px" }}>

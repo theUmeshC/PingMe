@@ -51,7 +51,11 @@ const SideBar = ({ user }) => {
   return (
     <Box
       flex={1}
-      sx={{ bgcolor: "background.default", minWidth: "250px", height: "100%" }}
+      sx={{
+        bgcolor: "background.default",
+        minWidth: "250px",
+        height: "100%",
+      }}
     >
       <SpeedDial
         ariaLabel="SpeedDial basic example"
@@ -78,6 +82,7 @@ const SideBar = ({ user }) => {
         sx={{
           bgcolor: "background.hover",
           height: "10%",
+          borderBottom: "1px solid purple",
         }}
       >
         <Typography

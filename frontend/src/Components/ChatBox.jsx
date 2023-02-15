@@ -92,6 +92,7 @@ const ChatBox = () => {
           gap: "10px",
           alignItems: "center",
           padding: "0 20px",
+          borderBottom: '1px solid purple'
         }}
       >
         <ArrowBackIcon

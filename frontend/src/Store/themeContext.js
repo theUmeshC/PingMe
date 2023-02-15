@@ -24,7 +24,7 @@ export const ColorContextProvider = ({ children }) => {
         ? {
             divider: cyan[900],
             background: {
-              default: '#CBF4F9',
+              default: 'white',
               Paper: cyan[300],
               selected: cyan[200],
               hover: cyan[500],

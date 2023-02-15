@@ -12,6 +12,7 @@ const MyMessage = ({ message }) => {
         width: "70%",
         position: "relative",
         left: "25%",
+        borderRadius: '5px'
       }}
     >
       <Typography variant="h6" align="right" sx={{ fontSize: "16px" }}>
