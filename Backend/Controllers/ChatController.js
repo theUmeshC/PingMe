@@ -76,7 +76,6 @@ export const getMessages = async (req, res) => {
     await pool.query("select * from chat where chat_id =$1", [chatId])
   ).rows;
   res.json(messages);
-  console.log(messages);
 };
 
 export const addMessage = async (req, res) => {
@@ -85,6 +84,10 @@ export const addMessage = async (req, res) => {
     chatId,
     message,
     senderId,
-    new Date()
+    new Date(),
   ]);
+  const messages = (
+    await pool.query("select * from chat where chat_id =$1", [chatId])
+  ).rows;
+  res.json(messages);
 };

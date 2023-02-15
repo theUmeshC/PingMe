@@ -14,11 +14,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { SubContext } from "../Store/Context";
 import axios from "axios";
 import { useOktaAuth } from "@okta/okta-react";
+import MyMessage from "./MyMessage";
+import FriendMessage from "./FriendMessage";
+import { v4 as uuidv4 } from "uuid";
 
 const ChatBox = () => {
   const [messageToSend, setMessageToSend] = useState("");
   const [isEmojiOpen, setEmojiOpen] = useState(false);
-  const status = "seen";
   const { messageBoxHandler, friend } = SubContext();
   const { authState } = useOktaAuth();
   const [messages, setMessages] = useState([]);
@@ -33,6 +35,10 @@ const ChatBox = () => {
 
   const handleMessageChange = (e) => {
     setMessageToSend(e.target.value);
+  };
+
+  const handleFocus = () => {
+    setEmojiOpen(false);
   };
 
   const handleSendMessage = () => {
@@ -52,6 +58,7 @@ const ChatBox = () => {
     response.then((messages) => {
       setMessages(messages.data);
     });
+    setMessageToSend("");
   };
 
   useEffect(() => {
@@ -96,7 +103,7 @@ const ChatBox = () => {
           <Avatar
             sx={{ bgcolor: "background.selected", color: "text.primary" }}
           >
-            {friend &&`${friend?.firstname[0]}${friend?.lastname[0]}`}
+            {friend && `${friend?.firstname[0]}${friend?.lastname[0]}`}
           </Avatar>
         </Badge>
         <Typography color={"text.primary"}>{friend?.username}</Typography>
@@ -113,53 +120,9 @@ const ChatBox = () => {
         {messages &&
           messages.map((message) =>
             message.sender_id === friend.user_id ? (
-              <Box
-                sx={{
-                  margin: "10px",
-                  bgcolor: "background.selected",
-                  padding: "5px",
-                  color: "text.primary",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  align="right"
-                  sx={{ fontSize: "18px" }}
-                >
-                  {message.messages}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  align="right"
-                  sx={{ fontSize: "12px" }}
-                >
-                  {/* {message.timestamp} */}
-                  {status}
-                </Typography>
-              </Box>
+              <MyMessage message={message} key={uuidv4()} friend={friend} />
             ) : (
-              <Box
-                sx={{
-                  margin: "10px",
-                  bgcolor: "background.hover",
-                  padding: "5px",
-                  color: "text.primary",
-                }}
-              >
-                <Typography variant="span" sx={{ fontSize: "15px" }}>
-                  Umesh
-                </Typography>
-                <Typography variant="h6" sx={{ fontSize: "18px" }}>
-                  {message.messages}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  align="right"
-                  sx={{ fontSize: "12px" }}
-                >
-                  {message.timestamp}
-                </Typography>
-              </Box>
+              <FriendMessage message={message} key={uuidv4()} friend={friend} />
             )
           )}
       </Box>
@@ -211,6 +174,7 @@ const ChatBox = () => {
               padding: "7px",
             }}
             onChange={handleMessageChange}
+            onFocus={handleFocus}
           />
           <SendIcon
             sx={{
