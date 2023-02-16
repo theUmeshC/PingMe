@@ -1,16 +1,26 @@
 import { Divider, Stack } from "@mui/material";
 import { useOktaAuth } from "@okta/okta-react";
 import React, { useEffect, useState } from "react";
-import ChatBox from "../Components/ChatBox";
+import ChatBox from "../Layout/ChatBox";
 import SideBar from "../Layout/SideBar";
 import { SubContext } from "../Store/Context";
 import axios from "axios";
+import io from "socket.io-client";
 
-const Home = ({ updateUser, dUser }) => {
+var socket;
+const Home = ({ updateUser }) => {
   const { messageBox } = SubContext();
   const { authState, oktaAuth } = useOktaAuth();
   const [user, setUser] = useState(null);
   const [dbUser, setDbUser] = useState(null);
+
+  useEffect(() => {
+    socket = io("http://localhost:9000");
+  }, []);
+
+  useEffect(() => {
+    dbUser && socket.emit("login", dbUser.user_id);
+  }, [dbUser]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -42,7 +52,7 @@ const Home = ({ updateUser, dUser }) => {
 
         response.then((val) => {
           updateUser(val.data);
-          setDbUser(val.data)
+          setDbUser(val.data);
         });
       }
     };
@@ -58,7 +68,11 @@ const Home = ({ updateUser, dUser }) => {
         divider={<Divider orientation="vertical" flexItem />}
         sx={{ display: { sm: "none", xs: "flex" } }}
       >
-        {messageBox === false ? <SideBar user={dbUser} /> : <ChatBox />}
+        {messageBox === false ? (
+          <SideBar user={dbUser} socket={socket}/>
+        ) : (
+          <ChatBox user={dbUser}socket={socket} />
+        )}
       </Stack>
       <Stack
         direction="row"
@@ -67,8 +81,8 @@ const Home = ({ updateUser, dUser }) => {
         divider={<Divider orientation="vertical" flexItem />}
         sx={{ display: { sm: "flex", xs: "none" } }}
       >
-        <SideBar user={dbUser} />
-        <ChatBox />
+        <SideBar user={dbUser} socket={socket}/>
+        <ChatBox user={dbUser} socket={socket}/>
       </Stack>
     </>
   );

@@ -1,12 +1,5 @@
-import {
-  AppBar,
-  Avatar,
-  Badge,
-  Box,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { AppBar, Avatar, Box, TextField, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiPicker from "emoji-picker-react";
@@ -14,11 +7,14 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { SubContext } from "../Store/Context";
 import axios from "axios";
 import { useOktaAuth } from "@okta/okta-react";
-import MyMessage from "./MyMessage";
-import FriendMessage from "./FriendMessage";
+import MyMessage from "../Components/MyMessage";
+import FriendMessage from "../Components/FriendMessage";
 import { v4 as uuidv4 } from "uuid";
+import { ColorContext } from "../Store/themeContext";
 
-const ChatBox = () => {
+const ChatBox = ({ user, socket }) => {
+  const scrollRef = useRef();
+  const { mode } = ColorContext();
   const [messageToSend, setMessageToSend] = useState("");
   const [isEmojiOpen, setEmojiOpen] = useState(false);
   const { messageBoxHandler, friend } = SubContext();
@@ -42,24 +38,42 @@ const ChatBox = () => {
   };
 
   const handleSendMessage = () => {
-    const response = axios({
-      method: "post",
-      url: "http://localhost:9000/chat/sendMessage",
-      headers: {
-        Authorization: `Bearer ${authState.accessToken.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      data: {
-        chatId: friend.chat_id,
-        senderId: friend.user_id,
-        message: messageToSend,
-      },
-    });
-    response.then((messages) => {
-      setMessages(messages.data);
-    });
+    try {
+      const response = axios({
+        method: "post",
+        url: "http://localhost:9000/chat/sendMessage",
+        headers: {
+          Authorization: `Bearer ${authState.accessToken.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          chatId: friend.chat_id,
+          senderId: user.user_id,
+          message: messageToSend,
+        },
+      });
+      response.then((messages) => {
+        setMessages(messages.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    socket.emit("send message", messageToSend, friend.chat_id, friend.user_id);
     setMessageToSend("");
   };
+
+  useEffect(() => {
+    socket?.on("receive message", (data) => {      
+      setMessages((prev) => [
+        ...prev,
+        {
+          messages: data.newMessage,
+          senderId: data.senderId,
+          timeStamp: data.timeStamp,
+        },
+      ]);
+    });
+  }, [socket]);
 
   useEffect(() => {
     if (friend) {
@@ -80,6 +94,10 @@ const ChatBox = () => {
     }
   }, [authState, friend]);
 
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <Box flex={3} sx={{ bgcolor: "background.default" }}>
       <AppBar
@@ -92,21 +110,16 @@ const ChatBox = () => {
           gap: "10px",
           alignItems: "center",
           padding: "0 20px",
-          borderBottom: '1px solid purple'
+          borderBottom: "1px solid purple",
         }}
       >
         <ArrowBackIcon
           sx={{ display: { sm: "none", xs: "flex", cursor: "pointer" } }}
           onClick={() => messageBoxHandler(null)}
         />
-
-        <Badge variant="dot" color="success" overlap="circular">
-          <Avatar
-            sx={{ bgcolor: "background.selected", color: "text.primary" }}
-          >
-            {friend && `${friend?.firstname[0]}${friend?.lastname[0]}`}
-          </Avatar>
-        </Badge>
+        <Avatar sx={{ bgcolor: "background.selected", color: "text.primary" }}>
+          {friend && `${friend?.firstname[0]}${friend?.lastname[0]}`}
+        </Avatar>
         <Typography color={"text.primary"}>{friend?.username}</Typography>
       </AppBar>
       <Box
@@ -120,10 +133,14 @@ const ChatBox = () => {
       >
         {messages &&
           messages.map((message) =>
-            message.sender_id === friend.user_id ? (
-              <MyMessage message={message} key={uuidv4()} friend={friend} />
+            message.sender_id === user.user_id ? (
+              <div ref={scrollRef} key={uuidv4()}>
+                <MyMessage message={message} friend={friend} />
+              </div>
             ) : (
-              <FriendMessage message={message} key={uuidv4()} friend={friend} />
+              <div ref={scrollRef} key={uuidv4()}>
+                <FriendMessage message={message} friend={friend} />
+              </div>
             )
           )}
       </Box>
@@ -154,14 +171,15 @@ const ChatBox = () => {
             <Box
               sx={{
                 position: "absolute",
-                top: "-300px",
+                top: "-350px",
                 left: "10px",
               }}
             >
               <EmojiPicker
-                height={300}
+                height={350}
                 width="300px"
                 onEmojiClick={handleEmojiSelect}
+                theme={mode}
               />
             </Box>
           ) : null}

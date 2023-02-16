@@ -11,7 +11,7 @@ export const addFriend = async (req, res) => {
       [senderId, receiverId]
     )
   ).rows;
-  console.log(connect);
+
   if (!connect) {
     const data = (
       await pool.query("INSERT INTO friends values($1, $2, $3)", [
@@ -20,16 +20,19 @@ export const addFriend = async (req, res) => {
         receiverId,
       ])
     ).rows;
-    console.log("added to friends");
+
     res.json({ data, message: "added to friends list" });
+
   } else {
     console.log("already friends");
     res.json({ message: "already friends" });
   }
+
 };
 
 export const get_all_users = async (req, res) => {
   const { userId } = req.body;
+
   try {
     const users = (
       await pool.query("select * from users where user_id != $1", [userId])
@@ -39,16 +42,7 @@ export const get_all_users = async (req, res) => {
   } catch (error) {
     return res.error(error);
   }
-  // try {
-  //   const users = await Users.findAll({
-  //     where: { user_id: { [Op.not]: `${userId}` } },
-  //   })
-  //     .then((users) => users)
-  //     .catch((err) => console.log(err));
-  //   return res.json(users);
-  // } catch (error) {
-  //   return res.error(error);
-  // }
+
 };
 
 export const getFriends = async (req, res) => {
@@ -73,21 +67,26 @@ export const getFriends = async (req, res) => {
 export const getMessages = async (req, res) => {
   const { chatId } = req.body;
   const messages = (
-    await pool.query("select * from chat where chat_id =$1", [chatId])
+    await pool.query("select messages, sender_id, timestamp from chat where chat_id =$1", [chatId])
   ).rows;
   res.json(messages);
 };
 
 export const addMessage = async (req, res) => {
+
   const { chatId, senderId, message } = req.body;
+  
   await pool.query("insert into chat values($1, $2, $3, $4)", [
     chatId,
     message,
     senderId,
     new Date(),
   ]);
+
   const messages = (
-    await pool.query("select * from chat where chat_id =$1", [chatId])
+    await pool.query("select messages, sender_id, timestamp from chat where chat_id =$1", [chatId])
   ).rows;
+
   res.json(messages);
+
 };

@@ -11,7 +11,8 @@ const MyMessage = ({ message }) => {
         color: "text.primary",
         width: "70%",
         position: "relative",
-        left: "25%",
+        left: "30%",
+        transform: 'translateX(-20px)',
         borderRadius: '5px'
       }}
     >

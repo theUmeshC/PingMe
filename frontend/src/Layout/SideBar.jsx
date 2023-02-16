@@ -19,12 +19,15 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
-const SideBar = ({ user }) => {
+
+const SideBar = ({ user, socket }) => {
   const userId = user && user.user_id;
   const { authState } = useOktaAuth();
   const { messageBoxHandler, friendHandler } = SubContext();
   const history = useHistory();
   const [friends, setFriends] = useState(null);
+
+
 
   useEffect(() => {
     if (userId) {
@@ -46,6 +49,7 @@ const SideBar = ({ user }) => {
   const openMessageHandler = (friend) => {
     messageBoxHandler();
     friendHandler(friend);
+    socket?.emit("join room", friend.chat_id)
   };
 
   return (
