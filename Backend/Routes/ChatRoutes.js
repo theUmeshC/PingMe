@@ -2,7 +2,9 @@ import express from "express";
 import {
   addFriend,
   addMessage,
+  addUsersToGroup,
   getFriends,
+  getGroups,
   getMessages,
   get_all_users,
 } from "../Controllers/ChatController.js";
@@ -18,5 +20,9 @@ chatRouter.post("/getFriends", getFriends);
 chatRouter.post("/getMessages", getMessages);
 
 chatRouter.post("/sendMessage", addMessage);
+
+chatRouter.post("/addToGroup", addUsersToGroup);
+
+chatRouter.post("/getGroups", getGroups);
 
 export default chatRouter;

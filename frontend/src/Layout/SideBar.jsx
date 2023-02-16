@@ -8,48 +8,38 @@ import {
   Badge,
   SpeedDial,
 } from "@mui/material";
-import { useOktaAuth } from "@okta/okta-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { SubContext } from "../Store/Context";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-
+import useAxios from "../Helper/useAxios";
 
 const SideBar = ({ user, socket }) => {
-  const userId = user && user.user_id;
-  const { authState } = useOktaAuth();
+  const userId = JSON.parse(localStorage.getItem("user")).user_id;
   const { messageBoxHandler, friendHandler } = SubContext();
   const history = useHistory();
-  const [friends, setFriends] = useState(null);
 
+  const { data: friends } = useAxios("http://localhost:9000/chat/getFriends", {
+    userId,
+  });
 
+  const { loading, data: groups } = useAxios(
+    "http://localhost:9000/chat/getGroups",
+    { userId }
+  );
 
-  useEffect(() => {
-    if (userId) {
-      const response = axios({
-        method: "post",
-        url: "http://localhost:9000/chat/getFriends",
-        headers: {
-          Authorization: `Bearer ${authState.accessToken.accessToken}`,
-          "Content-Type": "application/json",
-        },
-        data: {
-          userId,
-        },
-      });
-      response.then((val) => setFriends(val.data));
-    }
-  }, [userId, authState]);
+  if(!loading){
+    console.log(groups);
+  }
 
   const openMessageHandler = (friend) => {
     messageBoxHandler();
     friendHandler(friend);
-    socket?.emit("join room", friend.chat_id)
+    socket?.emit("join room", friend.chat_id);
   };
 
   return (

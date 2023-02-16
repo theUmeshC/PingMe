@@ -8,6 +8,7 @@ import { ColorContextProvider } from "./Store/themeContext";
 import { oktaConfig } from "./Lib/oktaConfig";
 import AddUser from "./Pages/AddUser";
 import { useCallback, useState } from "react";
+import AddGroup from "./Pages/AddGroup";
 
 const CALLBACK_PATH = "/login/callback";
 
@@ -39,6 +40,9 @@ function App() {
             </SecureRoute>
             <SecureRoute path="/addContact">
               <AddUser user={user} />
+            </SecureRoute>
+            <SecureRoute path="/addGroup">
+              <AddGroup user={user}/>
             </SecureRoute>
           </ColorContextProvider>
         </Switch>

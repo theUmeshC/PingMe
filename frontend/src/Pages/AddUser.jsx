@@ -1,33 +1,21 @@
 import { AppBar, Avatar, Box, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Stack } from "@mui/system";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useOktaAuth } from "@okta/okta-react";
 import { v4 as uuidv4 } from "uuid";
+import useAxios from "../Helper/useAxios";
+
 
 const AddUsers = ({ user }) => {
-  const [users, setUsers] = useState(null);
   const { authState } = useOktaAuth();
   const userId = user.user_id;
-
-  useEffect(() => {
-    if (userId) {
-      const response = axios({
-        method: "post",
-        url: "http://localhost:9000/chat/getAllUsers",
-        headers: {
-          Authorization: `Bearer ${authState.accessToken.accessToken}`,
-          "Content-Type": "application/json",
-        },
-        data: {
-          userId,
-        },
-      });
-      response.then((val) => setUsers(val.data));
-    }
-  }, [authState, userId]);
+  const {  data: users } = useAxios(
+    "http://localhost:9000/chat/getAllUsers",
+    { userId }
+  );
 
   const addFriendHandler = (id) => {
     if (userId && id) {

@@ -10,18 +10,24 @@ export const ContextProvider = ({ children }) => {
 
   const [friend, setFriend] = useState(null);
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   const contextValue = useMemo(
     () => ({
       messageBox,
       friend,
+      currentUser,
       messageBoxHandler: () => {
         setMessageBox((prevState) => !prevState);
       },
       friendHandler: (user) => {
         setFriend(user);
       },
+      userHandler : (user) => {
+        setCurrentUser(user);
+      }
     }),
-    [messageBox, friend]
+    [messageBox, friend,currentUser]
   );
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };

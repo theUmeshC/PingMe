@@ -7,7 +7,7 @@ import { SubContext } from "../Store/Context";
 import axios from "axios";
 import io from "socket.io-client";
 
-var socket;
+let socket;
 const Home = ({ updateUser }) => {
   const { messageBox } = SubContext();
   const { authState, oktaAuth } = useOktaAuth();
@@ -36,7 +36,7 @@ const Home = ({ updateUser }) => {
   }, [authState, oktaAuth]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       if (user) {
         const response = axios({
           method: "post",
@@ -53,6 +53,7 @@ const Home = ({ updateUser }) => {
         response.then((val) => {
           updateUser(val.data);
           setDbUser(val.data);
+          localStorage.setItem("user", JSON.stringify(val.data));
         });
       }
     };
@@ -69,9 +70,9 @@ const Home = ({ updateUser }) => {
         sx={{ display: { sm: "none", xs: "flex" } }}
       >
         {messageBox === false ? (
-          <SideBar user={dbUser} socket={socket}/>
+          <SideBar user={dbUser} socket={socket} />
         ) : (
-          <ChatBox user={dbUser}socket={socket} />
+          <ChatBox user={dbUser} socket={socket} />
         )}
       </Stack>
       <Stack
@@ -81,8 +82,8 @@ const Home = ({ updateUser }) => {
         divider={<Divider orientation="vertical" flexItem />}
         sx={{ display: { sm: "flex", xs: "none" } }}
       >
-        <SideBar user={dbUser} socket={socket}/>
-        <ChatBox user={dbUser} socket={socket}/>
+        <SideBar user={dbUser} socket={socket} />
+        <ChatBox user={dbUser} socket={socket} />
       </Stack>
     </>
   );
