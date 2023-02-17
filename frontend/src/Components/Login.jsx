@@ -15,8 +15,8 @@ const Login = ({ handleLogin }) => {
         flexDirection: "column",
       }}
     >
-      <Typography variant="h3" sx={{fontFamily: 'Caveat'}}>Welcome to Ping Me</Typography >
-      <Typography variant="h5" mb={5} sx={{fontFamily: 'Caveat'}}>An Awesome Chatting App!! </Typography>
+      <Typography variant="h3">Welcome to Ping Me</Typography >
+      <Typography variant="h5" mb={5}>An Awesome Chatting App!! </Typography>
       <Button variant="contained" className="loginBtn" onClick={()=> handleLogin()}>Login</Button>
     </Box>
   );

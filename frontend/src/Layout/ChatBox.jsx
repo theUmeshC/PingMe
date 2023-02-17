@@ -50,6 +50,7 @@ const ChatBox = ({ user, socket }) => {
           chatId: friend.chat_id,
           senderId: user.user_id,
           message: messageToSend,
+          sender_name: user.username
         },
       });
       response.then((messages) => {
@@ -58,18 +59,19 @@ const ChatBox = ({ user, socket }) => {
     } catch (err) {
       console.log(err);
     }
-    socket.emit("send message", messageToSend, friend.chat_id, friend.user_id);
+    socket.emit("send message", messageToSend, friend.chat_id, friend.user_id, user.username);
     setMessageToSend("");
   };
 
   useEffect(() => {
-    socket?.on("receive message", (data) => {      
+    socket?.on("receive message", (data) => {
       setMessages((prev) => [
         ...prev,
         {
           messages: data.newMessage,
           senderId: data.senderId,
           timeStamp: data.timeStamp,
+          sender_name: data.username,
         },
       ]);
     });
@@ -95,6 +97,7 @@ const ChatBox = ({ user, socket }) => {
   }, [authState, friend]);
 
   useEffect(() => {
+    console.log(messages);
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -105,6 +108,7 @@ const ChatBox = ({ user, socket }) => {
         sx={{
           bgcolor: "background.hover",
           height: "10%",
+          minHeight: "50px",
           display: "flex",
           flexDirection: "row",
           gap: "10px",
@@ -117,10 +121,24 @@ const ChatBox = ({ user, socket }) => {
           sx={{ display: { sm: "none", xs: "flex", cursor: "pointer" } }}
           onClick={() => messageBoxHandler(null)}
         />
-        <Avatar sx={{ bgcolor: "background.selected", color: "text.primary" }}>
-          {friend && `${friend?.firstname[0]}${friend?.lastname[0]}`}
-        </Avatar>
-        <Typography color={"text.primary"}>{friend?.username}</Typography>
+        {friend && friend.isGroup && <>
+            <Avatar
+              sx={{ bgcolor: "background.selected", color: "text.primary" }}
+            >
+              {`${friend?.group_name[0]}${friend?.group_name[1]}`}
+            </Avatar>
+            <Typography color={"text.primary"}>{friend?.group_name}</Typography>
+          </>}
+        {friend && !friend.isGroup && (
+          <>
+            <Avatar
+              sx={{ bgcolor: "background.selected", color: "text.primary" }}
+            >
+              {`${friend?.firstname[0]}${friend?.lastname[0]}`}
+            </Avatar>
+            <Typography color={"text.primary"}>{friend?.username}</Typography>
+          </>
+        )}
       </AppBar>
       <Box
         sx={{
@@ -133,7 +151,7 @@ const ChatBox = ({ user, socket }) => {
       >
         {messages &&
           messages.map((message) =>
-            message.sender_id === user.user_id ? (
+            message.sender_name === user.username ? (
               <div ref={scrollRef} key={uuidv4()}>
                 <MyMessage message={message} friend={friend} />
               </div>
@@ -154,6 +172,7 @@ const ChatBox = ({ user, socket }) => {
           sx={{
             height: "100%",
             width: "100%",
+            minHeight: "50px",
             bgcolor: "background.hover",
             color: "text.primary",
             margin: "auto",

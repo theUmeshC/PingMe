@@ -7,7 +7,6 @@ function useAxios(url, body) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { authState } = useOktaAuth();
-  console.log(body);
   useEffect(() => {
     const response = axios({
       method: "post",

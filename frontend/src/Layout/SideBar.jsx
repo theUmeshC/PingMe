@@ -1,15 +1,12 @@
 import {
   AppBar,
-  Avatar,
   Box,
   Divider,
   Stack,
   Typography,
-  Badge,
   SpeedDial,
 } from "@mui/material";
 import React from "react";
-import { SubContext } from "../Store/Context";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -17,30 +14,21 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import { useHistory } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import useAxios from "../Helper/useAxios";
+import Contacts from "../Components/Contact";
+import Group from "../Components/Group";
 
 const SideBar = ({ user, socket }) => {
-  const userId = JSON.parse(localStorage.getItem("user")).user_id;
-  const { messageBoxHandler, friendHandler } = SubContext();
+  const userId = JSON.parse(localStorage.getItem("user"))?.user_id || user.user_id;
   const history = useHistory();
 
   const { data: friends } = useAxios("http://localhost:9000/chat/getFriends", {
     userId,
   });
 
-  const { loading, data: groups } = useAxios(
+  const { data: groups } = useAxios(
     "http://localhost:9000/chat/getGroups",
     { userId }
   );
-
-  if(!loading){
-    console.log(groups);
-  }
-
-  const openMessageHandler = (friend) => {
-    messageBoxHandler();
-    friendHandler(friend);
-    socket?.emit("join room", friend.chat_id);
-  };
 
   return (
     <Box
@@ -77,6 +65,7 @@ const SideBar = ({ user, socket }) => {
           bgcolor: "background.hover",
           height: "10%",
           borderBottom: "1px solid purple",
+          minHeight: '50px',
         }}
       >
         <Typography
@@ -95,49 +84,11 @@ const SideBar = ({ user, socket }) => {
       >
         {friends &&
           friends.map((friend) => (
-            <Box
-              sx={{
-                bgcolor: "background.selected",
-                color: "text.primary",
-                display: "flex",
-                alignItems: "center",
-                gap: "20px",
-                padding: "5px",
-                cursor: "pointer",
-                "&:hover": {
-                  bgcolor: "background.hover",
-                },
-              }}
-              key={uuidv4()}
-              onClick={() => {
-                openMessageHandler(friend);
-              }}
-            >
-              {friend.status === "online" ? (
-                <Badge variant="dot" color="success" overlap="circular">
-                  <Avatar
-                    sx={{
-                      bgcolor: "background.hover",
-                      color: "text.primary",
-                    }}
-                  >
-                    {`${friend.firstname[0]}${friend.lastname[0]}`}
-                  </Avatar>
-                </Badge>
-              ) : (
-                <Badge variant="dot" color="error" overlap="circular">
-                  <Avatar
-                    sx={{
-                      bgcolor: "background.hover",
-                      color: "text.primary",
-                    }}
-                  >
-                    {`${friend.firstname[0]}${friend.lastname[0]}`}
-                  </Avatar>
-                </Badge>
-              )}
-              <Typography>{friend.username}</Typography>
-            </Box>
+            <Contacts key={uuidv4()} friend={friend} socket={socket} />
+          ))}
+        {groups &&
+          groups.map((group) => (
+            <Group key={uuidv4()} friend={group} socket={socket} />
           ))}
       </Stack>
     </Box>

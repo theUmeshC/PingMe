@@ -1,4 +1,12 @@
-import { Avatar, Box, Card, Container, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Card,
+  Container,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useRef, useState } from "react";
 import { useOktaAuth } from "@okta/okta-react";
 import axios from "axios";
@@ -10,7 +18,6 @@ const AddGroup = ({ user }) => {
   const userId =
     user?.user_id || JSON.parse(localStorage.getItem("user")).user_id;
   const dbUser = JSON.parse(localStorage.getItem("user"));
-  const [gParticipantsUid, setGParticipantsUid] = useState([userId]);
   const [gParticipants, setGParticipants] = useState([dbUser]);
   const groupTitle = useRef();
   const { loading, data: users } = useAxios(
@@ -29,13 +36,7 @@ const AddGroup = ({ user }) => {
       console.log(indPresent);
       if (indPresent !== undefined) {
         part = prev.filter((item) => item.user_id !== individual.user_id);
-        setGParticipantsUid((prev) => {
-          let x = prev.filter((i) => i !== indUid);
-          return x;
-        });
         return [...part];
-      } else {
-        setGParticipantsUid([...prev, indUid]);
       }
       return [...prev, individual];
     });
@@ -52,7 +53,7 @@ const AddGroup = ({ user }) => {
           "Content-Type": "application/json",
         },
         data: {
-            gParticipants,
+          gParticipants,
           groupId: uuidv4(),
           groupName,
         },
@@ -92,7 +93,11 @@ const AddGroup = ({ user }) => {
                   gap: "5px",
                 }}
               >
-                <input ref={groupTitle} style={{ height: "30px" }} />
+                <TextField
+                  placeholder="group name"
+                  size="small"
+                  ref={groupTitle}
+                />
                 <button
                   style={{
                     height: "30px",

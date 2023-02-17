@@ -23,7 +23,6 @@ export const addFriend = async (req, res) => {
 
     res.json({ data, message: "added to friends list" });
   } else {
-    console.log("already friends");
     res.json({ message: "already friends" });
   }
 };
@@ -75,7 +74,7 @@ export const getMessages = async (req, res) => {
   const { chatId } = req.body;
   const messages = (
     await pool.query(
-      "select messages, sender_id, timestamp from chat where chat_id =$1",
+      "select messages, sender_id, timestamp, sender_name from chat where chat_id =$1",
       [chatId]
     )
   ).rows;
@@ -83,18 +82,19 @@ export const getMessages = async (req, res) => {
 };
 
 export const addMessage = async (req, res) => {
-  const { chatId, senderId, message } = req.body;
+  const { chatId, senderId, message, sender_name } = req.body;
 
-  await pool.query("insert into chat values($1, $2, $3, $4)", [
+  await pool.query("insert into chat values($1, $2, $3, $4, $5)", [
     chatId,
     message,
     senderId,
+    sender_name,
     new Date(),
   ]);
 
   const messages = (
     await pool.query(
-      "select messages, sender_id, timestamp from chat where chat_id =$1",
+      "select messages, sender_id, timestamp, sender_name from chat where chat_id =$1",
       [chatId]
     )
   ).rows;
@@ -104,7 +104,6 @@ export const addMessage = async (req, res) => {
 
 export const addUsersToGroup = async (req, res) => {
   const { gParticipants, groupId, groupName } = req.body;
-  console.log(gParticipants);
   await pool.query("INSERT INTO group_chat VALUES ($1, $2, $3)", [
     groupId,
     groupName,

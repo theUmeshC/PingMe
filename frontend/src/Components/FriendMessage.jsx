@@ -14,7 +14,7 @@ const FriendMessage = ({message, friend}) => {
       }}
     >
       <Typography variant="span" sx={{ fontSize: "14px" }}>
-        {friend.username}
+        {message.sender_name}
       </Typography>
       <Typography variant="h6" sx={{ fontSize: "16px" }}>
         {message.messages}

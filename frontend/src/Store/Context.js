@@ -17,17 +17,11 @@ export const ContextProvider = ({ children }) => {
       messageBox,
       friend,
       currentUser,
-      messageBoxHandler: () => {
-        setMessageBox((prevState) => !prevState);
-      },
-      friendHandler: (user) => {
-        setFriend(user);
-      },
-      userHandler : (user) => {
-        setCurrentUser(user);
-      }
+      messageBoxHandler: () => setMessageBox((prevState) => !prevState),
+      friendHandler: (user) => setFriend(user),
+      userHandler: (user) => setCurrentUser(user),
     }),
-    [messageBox, friend,currentUser]
+    [messageBox, friend, currentUser]
   );
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };

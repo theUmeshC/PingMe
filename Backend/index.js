@@ -35,11 +35,10 @@ io.on("connection", (socket) => {
     console.log(chatId);
   })
 
-  socket.on('send message', (newMessage, chatId, senderId) => {
+  socket.on('send message', (newMessage, chatId, senderId, sender_name) => {
     console.log(newMessage, chatId);
-    socket.to(chatId).emit("receive message", {newMessage, senderId, timestamp: new Date()} )
+    socket.to(chatId).emit("receive message", {newMessage, senderId, timestamp: new Date(), sender_name} )
   })
-
 });
 
 const port = process.env.PORT || "6000";
