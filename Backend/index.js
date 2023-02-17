@@ -32,7 +32,10 @@ io.on("connection", (socket) => {
  
   socket.on("join room", (chatId) => {
     socket.join(chatId);
-    console.log(chatId);
+  })
+  
+  socket.on("leave room", (chatId) => {
+    socket.leave(chatId)
   })
 
   socket.on('send message', (newMessage, chatId, senderId, sender_name) => {

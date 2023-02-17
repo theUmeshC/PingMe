@@ -1,8 +1,9 @@
 import React from "react";
 import { useOktaAuth } from "@okta/okta-react";
 import { useHistory } from "react-router-dom";
-import Login from "../Components/Login";
 import { Box } from "@mui/material";
+
+import Login from "../Components/Login";
 
 const Auth = () => {
   const { authState, oktaAuth } = useOktaAuth();

@@ -1,14 +1,14 @@
 import { Avatar, Badge, Box, Typography } from "@mui/material";
 import React from "react";
+
 import { SubContext } from "../Store/Context";
 
-const Contacts = ({ friend, socket }) => {
+const Contacts = ({ friend }) => {
   const { messageBoxHandler, friendHandler } = SubContext();
   const openMessageHandler = (friend) => {
     const ctx = {...friend, isGroup: false}
     messageBoxHandler();
     friendHandler(ctx);
-    socket?.emit("join room", friend.chat_id);
   };
   return (
     <Box

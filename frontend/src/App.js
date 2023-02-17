@@ -1,14 +1,15 @@
 import { Route, Switch, useHistory } from "react-router-dom";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
+import { ColorContextProvider } from "./Store/themeContext";
+import { oktaConfig } from "./Lib/oktaConfig";
+import { useCallback, useState } from "react";
+
+import AddUser from "./Pages/AddUser";
+import AddGroup from "./Pages/AddGroup";
 import NavBar from "./Layout/NavBar";
 import Auth from "./Pages/Auth";
 import Home from "./Pages/Home";
-import { ColorContextProvider } from "./Store/themeContext";
-import { oktaConfig } from "./Lib/oktaConfig";
-import AddUser from "./Pages/AddUser";
-import { useCallback, useState } from "react";
-import AddGroup from "./Pages/AddGroup";
 
 const CALLBACK_PATH = "/login/callback";
 

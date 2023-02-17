@@ -1,14 +1,15 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import React from "react";
+import Groups2Icon from '@mui/icons-material/Groups2';
+
 import { SubContext } from "../Store/Context";
 
-const Group = ({ friend, socket }) => {
+const Group = ({ friend }) => {
   const { messageBoxHandler, friendHandler } = SubContext();
   const openMessageHandler = (friend) => {
     const ctx = {...friend, isGroup: true}
     messageBoxHandler();
     friendHandler(ctx);
-    socket?.emit("join room", friend.chat_id);
   };
   return (
     <Box
@@ -34,9 +35,9 @@ const Group = ({ friend, socket }) => {
           color: "text.primary",
         }}
       >
-        {`${friend.group_name[0]}${friend.group_name[1]}`}
+        <Groups2Icon />
       </Avatar>
-      <Typography>{friend.group_name}-Group</Typography>
+      <Typography>{friend.group_name}</Typography>
     </Box>
   );
 };

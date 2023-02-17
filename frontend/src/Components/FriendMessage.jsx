@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const FriendMessage = ({message}) => {
+const FriendMessage = ({ message }) => {
   return (
     <Box
       sx={{
@@ -9,13 +9,10 @@ const FriendMessage = ({message}) => {
         bgcolor: "background.hover",
         padding: "5px",
         color: "text.primary",
-        width: '70%',
-        borderRadius: '5px'
+        width: "70%",
+        borderRadius: "5px",
       }}
     >
-      <Typography variant="span" sx={{ fontSize: "14px" }}>
-        {message.sender_name}
-      </Typography>
       <Typography variant="h6" sx={{ fontSize: "16px" }}>
         {message.messages}
       </Typography>

@@ -2,15 +2,17 @@ import { AppBar, Avatar, Box, TextField, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
+import { Rings } from "react-loader-spinner";
 import EmojiPicker from "emoji-picker-react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { SubContext } from "../Store/Context";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { useOktaAuth } from "@okta/okta-react";
+
 import MyMessage from "../Components/MyMessage";
 import FriendMessage from "../Components/FriendMessage";
-import { v4 as uuidv4 } from "uuid";
 import { ColorContext } from "../Store/themeContext";
+import { SubContext } from "../Store/Context";
 
 const ChatBox = ({ user, socket }) => {
   const scrollRef = useRef();
@@ -20,6 +22,13 @@ const ChatBox = ({ user, socket }) => {
   const { messageBoxHandler, friend } = SubContext();
   const { authState } = useOktaAuth();
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (friend && socket) {
+      socket.emit("join room", friend.chat_id);
+      return () => socket.emit("leave room", friend.chat_id);
+    }
+  }, [friend, socket]);
 
   const handleEmojiBox = () => {
     setEmojiOpen((prev) => !prev);
@@ -71,6 +80,7 @@ const ChatBox = ({ user, socket }) => {
 
   useEffect(() => {
     socket?.on("receive message", (data) => {
+      console.log(data);
       setMessages((prev) => [
         ...prev,
         {
@@ -141,7 +151,7 @@ const ChatBox = ({ user, socket }) => {
                 </Typography>
               </>
             )}
-            { !friend.isGroup && (
+            {!friend.isGroup && (
               <>
                 <Avatar
                   sx={{ bgcolor: "background.selected", color: "text.primary" }}
@@ -241,10 +251,28 @@ const ChatBox = ({ user, socket }) => {
         </Box>
       )}
       {!friend && (
-        <Box flex={3} sx={{ bgcolor: "background.default", display: "flex" }}>
-          <Typography sx={{ margin: "auto" }}>
-            select a friend or group
-          </Typography>
+        <Box
+          flex={3}
+          sx={{
+            bgcolor: "background.default",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "text.primary",
+          }}
+        >
+          <Rings
+            height="80"
+            width="80"
+            color="#4fa94d"
+            radius="6"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="rings-loading"
+          />
+          <Typography>Select a Friend / Group</Typography>
         </Box>
       )}
     </>
