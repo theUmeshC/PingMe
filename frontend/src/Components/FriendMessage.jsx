@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const FriendMessage = ({message, friend}) => {
+const FriendMessage = ({message}) => {
   return (
     <Box
       sx={{
