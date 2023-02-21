@@ -13,6 +13,7 @@ import MyMessage from "../Components/MyMessage";
 import FriendMessage from "../Components/FriendMessage";
 import { ColorContext } from "../Store/themeContext";
 import { SubContext } from "../Store/Context";
+import Groups2Icon from "@mui/icons-material/Groups2";
 
 const ChatBox = ({ user, socket }) => {
   const scrollRef = useRef();
@@ -48,6 +49,12 @@ const ChatBox = ({ user, socket }) => {
 
   const handleSendMessage = () => {
     try {
+      const body = {
+        chatId: friend.chat_id,
+        senderId: user.user_id,
+        message: messageToSend,
+        sender_name: user.username,
+      };
       const response = axios({
         method: "post",
         url: "http://localhost:9000/chat/sendMessage",
@@ -55,12 +62,7 @@ const ChatBox = ({ user, socket }) => {
           Authorization: `Bearer ${authState.accessToken.accessToken}`,
           "Content-Type": "application/json",
         },
-        data: {
-          chatId: friend.chat_id,
-          senderId: user.user_id,
-          message: messageToSend,
-          sender_name: user.username,
-        },
+        data: body
       });
       response.then((messages) => {
         setMessages(messages.data);
@@ -113,7 +115,6 @@ const ChatBox = ({ user, socket }) => {
   }, [authState, friend]);
 
   useEffect(() => {
-    console.log(messages);
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -144,7 +145,7 @@ const ChatBox = ({ user, socket }) => {
                 <Avatar
                   sx={{ bgcolor: "background.selected", color: "text.primary" }}
                 >
-                  {`${friend.group_name[0]}${friend.group_name[1]}`}
+                  <Groups2Icon />
                 </Avatar>
                 <Typography color={"text.primary"}>
                   {friend.group_name}
