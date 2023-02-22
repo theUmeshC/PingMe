@@ -1,10 +1,10 @@
+import { useCallback, useState } from "react";
 import { Route, Switch, useHistory } from "react-router-dom";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import { Security, LoginCallback, SecureRoute } from "@okta/okta-react";
+
 import { ColorContextProvider } from "./Store/themeContext";
 import { oktaConfig } from "./Lib/oktaConfig";
-import { useCallback, useState } from "react";
-
 import AddUser from "./Pages/AddUser";
 import AddGroup from "./Pages/AddGroup";
 import NavBar from "./Layout/NavBar";
