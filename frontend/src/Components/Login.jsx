@@ -6,7 +6,6 @@ const Login = ({ handleLogin }) => {
   return (
     <Box
       sx={{
-        bgcolor: "skyblue",
         height: "100%",
         width: "100%",
         alignItems: "center",
@@ -15,9 +14,26 @@ const Login = ({ handleLogin }) => {
         flexDirection: "column",
       }}
     >
-      <Typography variant="h3">Welcome to Ping Me</Typography >
-      <Typography variant="h5" mb={5}>An Awesome Chatting App!! </Typography>
-      <Button variant="contained" className="loginBtn" onClick={()=> handleLogin()}>Login</Button>
+      <Typography
+        variant="h3"
+        sx={{
+          fontSize: {
+            xs: "28px",
+          },
+        }}
+      >
+        Welcome to Ping Me
+      </Typography>
+      <Typography variant="h5" mb={5}>
+        An Awesome Chatting App!!{" "}
+      </Typography>
+      <Button
+        variant="contained"
+        className="loginBtn"
+        onClick={() => handleLogin()}
+      >
+        Login
+      </Button>
     </Box>
   );
 };

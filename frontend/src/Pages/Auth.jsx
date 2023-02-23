@@ -1,7 +1,7 @@
 import React from "react";
 import { useOktaAuth } from "@okta/okta-react";
 import { useHistory } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import Login from "../Components/Login";
 
@@ -15,11 +15,14 @@ const Auth = () => {
   } else if (!authState.isAuthenticated) {
     return (
       <Box
-        sx={{          
+        sx={{
           height: "100vh",
           width: "100vw",
         }}
       >
+        {/* <Box sx={{ height: "20%",width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography>Celestial system</Typography>
+        </Box> */}
         <Login handleLogin={login} />
       </Box>
     );

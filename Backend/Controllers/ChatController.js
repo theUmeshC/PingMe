@@ -38,46 +38,54 @@ export const get_all_users = async (req, res) => {
   } catch (error) {
     return res.error(error);
   }
+
 };
 
 export const getFriends = async (req, res) => {
   const { userId } = req.body;
   let friends = [];
+
   const data = (
     await pool.query(
       "select users.* , friends.chat_id from users inner join friends on users.user_id = friends.sender_id AND friends.receiver_id= $1",
       [userId]
     )
   ).rows;
+
   const receiverData = (
     await pool.query(
       "select users.* , friends.chat_id from users inner join friends on users.user_id = friends.receiver_id AND friends.sender_id= $1",
       [userId]
     )
   ).rows;
+
   friends = [...data, ...receiverData];
   res.json(friends);
 };
 
 export const getGroups = async (req, res) => {
   const { userId } = req.body;
+
   const response = (
     await pool.query(
       "select * from group_chat join group_friends  on group_chat.group_id = group_friends.group_id where user_id= $1",
       [userId]
     )
   ).rows;
+
   res.json(response);
 };
 
 export const getMessages = async (req, res) => {
   const { chatId } = req.body;
+
   const messages = (
     await pool.query(
       "select messages, sender_id, timestamp, sender_name from chat where chat_id =$1",
       [chatId]
     )
   ).rows;
+
   res.json(messages);
 };
 
@@ -103,12 +111,15 @@ export const addMessage = async (req, res) => {
 };
 
 export const addUsersToGroup = async (req, res) => {
-  const { gParticipants, groupId, groupName } = req.body;
+  const { gParticipants, groupName } = req.body;
+  const groupId = uuidv4();
+
   await pool.query("INSERT INTO group_chat VALUES ($1, $2, $3)", [
     groupId,
     groupName,
     uuidv4(),
   ]);
+
   gParticipants.map(async (uid) => {
     await pool.query("INSERT INTO group_friends VALUES ($1, $2)", [
       uid.user_id,

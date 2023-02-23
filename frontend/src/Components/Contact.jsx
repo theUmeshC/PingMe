@@ -6,7 +6,7 @@ import { SubContext } from "../Store/Context";
 const Contacts = ({ friend }) => {
   const { messageBoxHandler, friendHandler } = SubContext();
   const openMessageHandler = (friend) => {
-    const ctx = {...friend, isGroup: false}
+    const ctx = { ...friend, isGroup: false };
     messageBoxHandler();
     friendHandler(ctx);
   };
@@ -29,16 +29,16 @@ const Contacts = ({ friend }) => {
       }}
     >
       {friend.status === "online" ? (
-        <Badge variant="dot" color="success" overlap="circular">
-          <Avatar
-            sx={{
-              bgcolor: "background.hover",
-              color: "text.primary",
-            }}
-          >
-            {`${friend.firstname[0]}${friend.lastname[0]}`}
-          </Avatar>
-        </Badge>
+        // <Badge variant="dot" color="success" overlap="circular">
+        <Avatar
+          sx={{
+            bgcolor: "background.hover",
+            color: "text.primary",
+          }}
+        >
+          {`${friend.firstname[0]}${friend.lastname[0]}`}
+        </Avatar>
+        // </Badge>
       ) : (
         <Badge variant="dot" color="error" overlap="circular">
           <Avatar

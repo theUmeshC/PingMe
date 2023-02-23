@@ -28,15 +28,13 @@ const AddGroup = ({ user }) => {
 
   const addParticipants = (individual) => {
     const indUid = individual.user_id;
-    console.log(indUid);
     setGParticipants((prev) => {
       let part;
       const indPresent = prev.find(
-        (item) => item.user_id === individual.user_id
+        (item) => item.user_id === indUid
       );
-      console.log(indPresent);
       if (indPresent !== undefined) {
-        part = prev.filter((item) => item.user_id !== individual.user_id);
+        part = prev.filter((item) => item.user_id !== indUid);
         return [...part];
       }
       return [...prev, individual];
@@ -55,7 +53,6 @@ const AddGroup = ({ user }) => {
         },
         data: {
           gParticipants,
-          groupId: uuidv4(),
           groupName,
         },
       });
@@ -94,10 +91,12 @@ const AddGroup = ({ user }) => {
                   gap: "5px",
                 }}
               >
-                <TextField
-                  placeholder="group name"
-                  size="small"
+                <input
+                  placeholder="Group name"
                   ref={groupTitle}
+                  style= {{
+                    height: '30px'
+                  }}
                 />
                 <button
                   style={{

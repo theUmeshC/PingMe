@@ -23,8 +23,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log('connected');
-
+  
   socket.on("login", (userID) => {
     socket.join(userID);
     socket.emit("connected to socket")
@@ -39,7 +38,6 @@ io.on("connection", (socket) => {
   })
 
   socket.on('send message', (newMessage, chatId, senderId, sender_name) => {
-    console.log(newMessage, chatId);
     socket.to(chatId).emit("receive message", {newMessage, senderId, timestamp: new Date(), sender_name} )
   })
 });

@@ -62,7 +62,7 @@ const ChatBox = ({ user, socket }) => {
           Authorization: `Bearer ${authState.accessToken.accessToken}`,
           "Content-Type": "application/json",
         },
-        data: body
+        data: body,
       });
       response.then((messages) => {
         setMessages(messages.data);

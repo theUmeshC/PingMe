@@ -8,9 +8,9 @@ const Pool = pg.Pool;
 const pool = new Pool({
   user: "postgres",
   password: process.env.DATABASE_PASSWORD,
-  host: "localhost",
+  host: process.env.DATABASE_HOSTNAME,
   port: 5432,
-  database: "PingMe-db",
+  database: "database_pingme",
   multipleStatements: true,
 });
 
