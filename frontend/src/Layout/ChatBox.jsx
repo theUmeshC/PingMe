@@ -1,4 +1,11 @@
-import { AppBar, Avatar, Box, TextField, Typography } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Box,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
@@ -31,6 +38,44 @@ const ChatBox = ({ user, socket }) => {
       return () => socket.emit("leave room", friend.chat_id);
     }
   }, [friend, socket]);
+
+  useEffect(() => {
+    socket?.on("receive message", (data) => {
+      console.log(data);
+      setMessages((prev) => [
+        ...prev,
+        {
+          messages: data.newMessage,
+          senderId: data.senderId,
+          timeStamp: data.timeStamp,
+          sender_name: data.username,
+        },
+      ]);
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    if (friend) {
+      const response = axios({
+        method: "post",
+        url: "http://localhost:9000/chat/getMessages",
+        headers: {
+          Authorization: `Bearer ${authState.accessToken.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          chatId: friend.chat_id,
+        },
+      });
+      response.then((messages) => {
+        setMessages(messages.data);
+      });
+    }
+  }, [authState, friend]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleEmojiBox = () => {
     setEmojiOpen((prev) => !prev);
@@ -81,43 +126,30 @@ const ChatBox = ({ user, socket }) => {
     setMessageToSend("");
   };
 
-  useEffect(() => {
-    socket?.on("receive message", (data) => {
-      console.log(data);
-      setMessages((prev) => [
-        ...prev,
-        {
-          messages: data.newMessage,
-          senderId: data.senderId,
-          timeStamp: data.timeStamp,
-          sender_name: data.username,
-        },
-      ]);
-    });
-  }, [socket]);
-
-  useEffect(() => {
-    if (friend) {
-      const response = axios({
-        method: "post",
-        url: "http://localhost:9000/chat/getMessages",
-        headers: {
-          Authorization: `Bearer ${authState.accessToken.accessToken}`,
-          "Content-Type": "application/json",
-        },
-        data: {
-          chatId: friend.chat_id,
-        },
-      });
-      response.then((messages) => {
-        setMessages(messages.data);
-      });
+  const handleFileChange = (e) => {
+    e.preventDefault();
+    try {
+      if (e.target.files[0]) {
+        var bodyFormData = new FormData();
+        bodyFormData.append("file", e.target.files[0]);
+        bodyFormData.append("chatId", friend.chat_id);
+        bodyFormData.append("sender_name", user.username);
+        const response = axios({
+          method: "post",
+          url: "http://localhost:9000/chat/sendFile",
+          headers: {
+            Authorization: `Bearer ${authState.accessToken.accessToken}`,
+          },
+          data: bodyFormData,
+        });
+        response.then((messages) => {
+          console.log(messages);
+        });
+      }
+    } catch (err) {
+      console.log(err);
     }
-  }, [authState, friend]);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  };
 
   return (
     <>
@@ -177,7 +209,7 @@ const ChatBox = ({ user, socket }) => {
           >
             {messages &&
               messages.map((message) =>
-                message.sender_name === user.username ? (
+                message.sender_name === user.username && message.messages ? (
                   <div ref={scrollRef} key={uuidv4()}>
                     <MyMessage message={message} />
                   </div>
@@ -208,9 +240,7 @@ const ChatBox = ({ user, socket }) => {
                 position: "relative",
               }}
             >
-              <SentimentSatisfiedAltIcon
-                onClick={() => handleEmojiBox()}
-              />
+              <SentimentSatisfiedAltIcon onClick={() => handleEmojiBox()} />
               {isEmojiOpen === true ? (
                 <Box
                   sx={{
@@ -227,7 +257,17 @@ const ChatBox = ({ user, socket }) => {
                   />
                 </Box>
               ) : null}
-              <AttachFileIcon />
+              <IconButton variant="contained" component="label">
+                <AttachFileIcon />
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  name="file"
+                  onChange={handleFileChange}
+                />
+              </IconButton>
               <TextField
                 value={messageToSend}
                 size="small"

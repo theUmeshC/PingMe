@@ -23,7 +23,24 @@ function useAxios(url, body) {
     });
   }, []);
 
-  return {loading, data};
+  return { loading, data };
 }
+
+export const useRequest = (url, body) => {
+  const { authState } = useOktaAuth();
+  const response = axios({
+    method: "post",
+    url: url,
+    headers: {
+      Authorization: `Bearer ${authState.accessToken.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    data: body,
+  });
+  const data = response.then((val) => {
+    return val;
+  });
+  return { data };
+};
 
 export default useAxios;

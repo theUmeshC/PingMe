@@ -7,7 +7,11 @@ import {
   getGroups,
   getMessages,
   get_all_users,
+  sendFile,
 } from "../Controllers/ChatController.js";
+import multer from "multer";
+
+const upload = multer({ dest: "uploads/" });
 
 const chatRouter = express.Router();
 
@@ -24,5 +28,7 @@ chatRouter.post("/sendMessage", addMessage);
 chatRouter.post("/addToGroup", addUsersToGroup);
 
 chatRouter.post("/getGroups", getGroups);
+
+chatRouter.post("/sendFile", upload.single("file"), sendFile);
 
 export default chatRouter;

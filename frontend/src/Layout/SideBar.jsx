@@ -101,12 +101,7 @@ const SideBar = ({ user, socket }) => {
           width="100"
           color="#4fa94d"
           ariaLabel="line-wave"
-          wrapperStyle={{}}
-          wrapperClass=""
           visible={true}
-          firstLineColor=""
-          middleLineColor=""
-          lastLineColor=""
         />
       ) : null}
     </>

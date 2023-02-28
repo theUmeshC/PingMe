@@ -38,7 +38,6 @@ export const get_all_users = async (req, res) => {
   } catch (error) {
     return res.error(error);
   }
-
 };
 
 export const getFriends = async (req, res) => {
@@ -126,4 +125,9 @@ export const addUsersToGroup = async (req, res) => {
       groupId,
     ]);
   });
+};
+
+export const sendFile = (req, res) => {
+  const { chatId, sender_name } = req.body;
+  console.log(req.file, chatId, sender_name);
 };
