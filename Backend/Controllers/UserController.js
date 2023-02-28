@@ -5,12 +5,11 @@ import pool from "../utils/pool.js";
 export const loginUser = async (req, res) => {
   const { user } = req.body;
   const uEmail = user.email;
-
   try {
     const databaseUser = (
       await pool.query("select username from users where email = $1", [uEmail])
     ).rows;
-
+    
     if (databaseUser.length > 0) {
       await pool.query("UPDATE users SET status = $1 where email=$2", [
         "online",
@@ -43,7 +42,7 @@ export const logoutUser = async (req, res) => {
   const { userId } = req.body;
   try {
     await pool.query("UPDATE users SET status = $1 where user_id=$2", [
-      'offline',
+      "offline",
       userId,
     ]);
     res.json("logged out");

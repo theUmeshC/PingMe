@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
 import { Rings } from "react-loader-spinner";
-import EmojiPicker from "emoji-picker-react";
+import Picker from "emoji-picker-react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -14,6 +14,7 @@ import FriendMessage from "../Components/FriendMessage";
 import { ColorContext } from "../Store/themeContext";
 import { SubContext } from "../Store/Context";
 import Groups2Icon from "@mui/icons-material/Groups2";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const ChatBox = ({ user, socket }) => {
   const scrollRef = useRef();
@@ -208,7 +209,6 @@ const ChatBox = ({ user, socket }) => {
               }}
             >
               <SentimentSatisfiedAltIcon
-                sx={{ color: "yellow" }}
                 onClick={() => handleEmojiBox()}
               />
               {isEmojiOpen === true ? (
@@ -219,7 +219,7 @@ const ChatBox = ({ user, socket }) => {
                     left: "10px",
                   }}
                 >
-                  <EmojiPicker
+                  <Picker
                     height={350}
                     width="300px"
                     onEmojiClick={handleEmojiSelect}
@@ -227,6 +227,7 @@ const ChatBox = ({ user, socket }) => {
                   />
                 </Box>
               ) : null}
+              <AttachFileIcon />
               <TextField
                 value={messageToSend}
                 size="small"
@@ -235,6 +236,7 @@ const ChatBox = ({ user, socket }) => {
                   width: "80%",
                   bgcolor: "background.selected",
                   padding: "7px",
+                  borderRadius: "5px",
                 }}
                 onChange={handleMessageChange}
                 onFocus={handleFocus}
