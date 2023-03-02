@@ -4,12 +4,25 @@ import { config } from "dotenv";
 import bodyParser from "body-parser";
 import http from "http";
 import { Server } from "socket.io";
+import { S3Client } from "@aws-sdk/client-s3";
 
 import chatRouter from "./Routes/ChatRoutes.js";
 import { oktaAuthRequired } from "./middleware/jwtVerifier.js";
 import userRouter from "./Routes/UserRouter.js";
 
 config();
+
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY;
+
+export const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
+  },
+  region: bucketRegion
+})
 
 const app = express();
 

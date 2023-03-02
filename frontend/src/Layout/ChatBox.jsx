@@ -139,6 +139,7 @@ const ChatBox = ({ user, socket }) => {
           url: "http://localhost:9000/chat/sendFile",
           headers: {
             Authorization: `Bearer ${authState.accessToken.accessToken}`,
+            'Content-Type': 'multipart/form-data'
           },
           data: bodyFormData,
         });

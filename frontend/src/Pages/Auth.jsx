@@ -1,7 +1,7 @@
 import React from "react";
 import { useOktaAuth } from "@okta/okta-react";
 import { useHistory } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 import Login from "../Components/Login";
 

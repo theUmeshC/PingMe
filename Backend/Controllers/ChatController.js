@@ -1,6 +1,16 @@
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
+import { config } from "dotenv";
+import crypto from 'crypto'
+
+config();
+
+const randomImageName = (bytes = 32) => crypto.randomBytes(16).toString('hex')
+
+const bucketName = process.env.BUCKET_NAME;
 
 import pool from "../utils/pool.js";
+import { s3 } from "../index.js";
 
 export const addFriend = async (req, res) => {
   const { senderId, receiverId } = req.body;
@@ -101,7 +111,7 @@ export const addMessage = async (req, res) => {
 
   const messages = (
     await pool.query(
-      "select messages, sender_id, timestamp, sender_name from chat where chat_id =$1",
+      "select * from chat where chat_id =$1",
       [chatId]
     )
   ).rows;
@@ -127,7 +137,19 @@ export const addUsersToGroup = async (req, res) => {
   });
 };
 
-export const sendFile = (req, res) => {
+export const sendFile = async (req, res) => {
   const { chatId, sender_name } = req.body;
   console.log(req.file, chatId, sender_name);
+
+  const params = {
+    Bucket: bucketName,
+    Key: randomImageName(),
+    Body: req.file.buffer,
+    ContentType: req.file.mimeType,
+  };
+
+  const command = new PutObjectCommand(params);
+  
+  await s3.send(command);
+  res.send({});
 };
