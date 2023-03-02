@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import SendIcon from "@mui/icons-material/Send";
 import { Rings } from "react-loader-spinner";
@@ -16,15 +16,13 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { useOktaAuth } from "@okta/okta-react";
 
-import MyMessage from "../Components/MyMessage";
-import FriendMessage from "../Components/FriendMessage";
 import { ColorContext } from "../Store/themeContext";
 import { SubContext } from "../Store/Context";
 import Groups2Icon from "@mui/icons-material/Groups2";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import MessageWrapper from "../Components/MessageWrapper";
 
 const ChatBox = ({ user, socket }) => {
-  const scrollRef = useRef();
   const { mode } = ColorContext();
   const [messageToSend, setMessageToSend] = useState("");
   const [isEmojiOpen, setEmojiOpen] = useState(false);
@@ -68,14 +66,11 @@ const ChatBox = ({ user, socket }) => {
         },
       });
       response.then((messages) => {
+        console.log(messages);
         setMessages(messages.data);
       });
     }
   }, [authState, friend]);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   const handleEmojiBox = () => {
     setEmojiOpen((prev) => !prev);
@@ -133,18 +128,20 @@ const ChatBox = ({ user, socket }) => {
         var bodyFormData = new FormData();
         bodyFormData.append("file", e.target.files[0]);
         bodyFormData.append("chatId", friend.chat_id);
+        bodyFormData.append("sender_id", user.user_id);
         bodyFormData.append("sender_name", user.username);
         const response = axios({
           method: "post",
           url: "http://localhost:9000/chat/sendFile",
           headers: {
             Authorization: `Bearer ${authState.accessToken.accessToken}`,
-            'Content-Type': 'multipart/form-data'
+            "Content-Type": "multipart/form-data",
           },
           data: bodyFormData,
         });
         response.then((messages) => {
           console.log(messages);
+          setMessages(messages.data);
         });
       }
     } catch (err) {
@@ -161,7 +158,6 @@ const ChatBox = ({ user, socket }) => {
             sx={{
               bgcolor: "background.hover",
               height: "10%",
-              minHeight: "50px",
               display: "flex",
               flexDirection: "row",
               gap: "10px",
@@ -209,17 +205,11 @@ const ChatBox = ({ user, socket }) => {
             }}
           >
             {messages &&
-              messages.map((message) =>
-                message.sender_name === user.username && message.messages ? (
-                  <div ref={scrollRef} key={uuidv4()}>
-                    <MyMessage message={message} />
-                  </div>
-                ) : (
-                  <div ref={scrollRef} key={uuidv4()}>
-                    <FriendMessage message={message} />
-                  </div>
-                )
-              )}
+              messages.map((message) => (
+                <div key={uuidv4()}>
+                  <MessageWrapper message={message} user={user} />
+                </div>
+              ))}
           </Box>
           <Box
             sx={{
@@ -231,7 +221,6 @@ const ChatBox = ({ user, socket }) => {
               sx={{
                 height: "100%",
                 width: "100%",
-                minHeight: "50px",
                 bgcolor: "background.hover",
                 color: "text.primary",
                 margin: "auto",

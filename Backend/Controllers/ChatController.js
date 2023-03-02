@@ -1,11 +1,12 @@
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import { config } from "dotenv";
-import crypto from 'crypto'
+import crypto from "crypto";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 config();
 
-const randomImageName = (bytes = 32) => crypto.randomBytes(16).toString('hex')
+const randomImageName = (bytes = 32) => crypto.randomBytes(16).toString("hex");
 
 const bucketName = process.env.BUCKET_NAME;
 
@@ -89,12 +90,22 @@ export const getMessages = async (req, res) => {
   const { chatId } = req.body;
 
   const messages = (
-    await pool.query(
-      "select messages, sender_id, timestamp, sender_name from chat where chat_id =$1",
-      [chatId]
-    )
+    await pool.query("select * from chat where chat_id =$1", [chatId])
   ).rows;
 
+  for (const message of messages) {
+    if (message.file_url) {
+      const getObjectParams = {
+        Bucket: bucketName,
+        Key: message.file_url,
+      };
+      const command = new GetObjectCommand(getObjectParams);
+
+      const url = await getSignedUrl(s3, command, { expiresIn: 480000 });
+
+      message.file_url = url;
+    }
+  }
   res.json(messages);
 };
 
@@ -110,11 +121,22 @@ export const addMessage = async (req, res) => {
   ]);
 
   const messages = (
-    await pool.query(
-      "select * from chat where chat_id =$1",
-      [chatId]
-    )
+    await pool.query("select * from chat where chat_id =$1", [chatId])
   ).rows;
+
+  for (const message of messages) {
+    if (message.file_url) {
+      const getObjectParams = {
+        Bucket: bucketName,
+        Key: message.file_url,
+      };
+      const command = new GetObjectCommand(getObjectParams);
+
+      const url = await getSignedUrl(s3, command, { expiresIn: 480000 });
+
+      message.file_url = url;
+    }
+  }
 
   res.json(messages);
 };
@@ -138,18 +160,43 @@ export const addUsersToGroup = async (req, res) => {
 };
 
 export const sendFile = async (req, res) => {
-  const { chatId, sender_name } = req.body;
-  console.log(req.file, chatId, sender_name);
+  const { chatId, sender_name, sender_id } = req.body;
+
+  const imageName = randomImageName();
+  const type = req.file.mimetype.split("/")[0];
 
   const params = {
     Bucket: bucketName,
-    Key: randomImageName(),
+    Key: imageName,
     Body: req.file.buffer,
-    ContentType: req.file.mimeType,
+    ContentType: req.file.mimetype,
   };
 
   const command = new PutObjectCommand(params);
-  
+
+  await pool.query(
+    "insert into chat(chat_id, file_url, sender_id, sender_name, type, timestamp) values($1, $2, $3, $4, $5, $6)",
+    [chatId, imageName, sender_id, sender_name, type, new Date()]
+  );
+
   await s3.send(command);
-  res.send({});
+  const messages = (
+    await pool.query("select * from chat where chat_id =$1", [chatId])
+  ).rows;
+
+  for (const message of messages) {
+    if (message.file_url) {
+      const getObjectParams = {
+        Bucket: bucketName,
+        Key: message.file_url,
+      };
+      const command = new GetObjectCommand(getObjectParams);
+
+      const url = await getSignedUrl(s3, command, { expiresIn: 480000 });
+
+      message.file_url = url;
+    }
+  }
+
+  res.json(messages);
 };
