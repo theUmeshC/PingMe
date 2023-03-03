@@ -24,7 +24,7 @@ const MessageWrapper = ({ message, user }) => {
             </Typography>
           </Box>
         )}
-        {!message.messages && (
+        {message.sender_name === user.username && !message.messages && (
           <Box
             sx={{
               margin: "10px",
@@ -43,17 +43,20 @@ const MessageWrapper = ({ message, user }) => {
                   alt="sent Images"
                   align="right"
                   src={message.file_url}
-                  style={{ width: "20%" }}
+                  style={{
+                    width: "150px",
+                  }}
                 />
               </>
             )}
-            {message.type === "pdf" && message.file_url && (
+            {message.type === "application" && message.file_url && (
               <>
                 <object
                   data={message.file_url}
                   type="application/pdf"
-                  width="300"
-                  height="200"
+                  style={{
+                    width: "85%",
+                  }}
                   align="right"
                 >
                   {""}
@@ -66,45 +69,66 @@ const MessageWrapper = ({ message, user }) => {
     );
   if (message.sender_name !== user.username)
     return (
-      <Box
-        sx={{
-          margin: "10px",
-          bgcolor: "background.hover",
-          padding: "5px",
-          color: "text.primary",
-          width: "70%",
-          borderRadius: "5px",
-        }}
-      >
+      <>
         {message.messages && (
-          <>
+          <Box
+            sx={{
+              margin: "10px",
+              bgcolor: "background.hover",
+              padding: "5px",
+              color: "text.primary",
+              width: "70%",
+              borderRadius: "5px",
+            }}
+          >
             <Typography variant="h6" sx={{ fontSize: "16px" }}>
               {message.messages}
             </Typography>
             <Typography variant="h6" align="right" sx={{ fontSize: "10px" }}>
               {message.timestamp}
             </Typography>
-          </>
+          </Box>
         )}
-        {message.type === "image" && (
-          <>
-            image
-            <image src={message.file_url} />
-          </>
+        {!message.messages && (
+          <Box
+            sx={{
+              margin: "10px",
+              padding: "5px",
+              color: "text.primary",
+              width: "70%",
+              borderRadius: "5px",
+            }}
+          >
+            {message.type === "image" && (
+              <>
+                <img
+                  alt="sent Images"
+                  align="left"
+                  src={message.file_url}
+                  style={{
+                    width: "150px",
+                  }}
+                />
+              </>
+            )}
+            {message.type === "application" && message.file_url && (
+              <>
+                <object
+                  data={message.file_url}
+                  type="application/pdf"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  align="right"
+                >
+                  {""}
+                </object>
+              </>
+            )}
+          </Box>
         )}
-        {message.type === "application" && message.file_url && (
-          <>
-            <object
-              data={message.file_url}
-              type="application/pdf"
-              width="300"
-              height="200"
-            >
-              {""}
-            </object>
-          </>
-        )}
-      </Box>
+      </>
     );
 };
 
